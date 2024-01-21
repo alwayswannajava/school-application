@@ -12,9 +12,6 @@
         <Logger name="PostgresSqlGroupDao" level="trace" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
-<!--        <Logger name="NameOfAnotherClassToLog" level="info" additivity="false">-->
-<!--            <AppenderRef ref="Console"/>-->
-<!--        </Logger>-->
         <Root level="trace">
             <AppenderRef ref="Console"/>
         </Root>
