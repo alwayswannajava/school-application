@@ -6,8 +6,7 @@ public class Student {
     private String firstName;
     private String lastName;
 
-    public Student(int studentId, int groupId, String firstName, String lastName) {
-        this.studentId = studentId;
+    public Student(int groupId, String firstName, String lastName) {
         this.groupId = groupId;
         this.firstName = firstName;
         this.lastName = lastName;

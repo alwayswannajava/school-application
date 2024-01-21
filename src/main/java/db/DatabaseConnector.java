@@ -1,38 +1,41 @@
 package db;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class DatabaseConnector {
-    private static final String DATABASE_URL = "jdbc:postgresql://localhost:5432/";
-    private static final String DATABASE_NAME = "schoolDB";
-    private static final String DATABASE_USER_NAME = "postgres";
-    private static final String DATABASE_USER_PASSWORD = "root";
+    private static final String PROPERTIES_FILE_PATH = "src/main/resources/db.properties";
+    private static final String DATABASE_URL = "db.url";
+    private static final String DATABASE_USER_NAME = "db.username";
+    private static final String DATABASE_USER_PASSWORD = "db.password";
+    private static Logger log = LogManager.getLogger(DatabaseConnector.class);
 
-    public Connection connectToDatabase() {
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(DATABASE_URL + DATABASE_NAME,
-                    DATABASE_USER_NAME, DATABASE_USER_PASSWORD);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+
+    public Connection connectToDatabase() throws SQLException {
+        log.trace("Creating database properties");
+        Properties properties = new Properties();
+        try(InputStream inputStreamProperties = new FileInputStream(PROPERTIES_FILE_PATH)) {
+            properties.load(inputStreamProperties);
         }
-        return connection;
+        catch (IOException e) {
+            log.error("Something went wrong ", e);
+        }
+        log.trace("Register new postgreSQL driver");
+        Driver driver = new org.postgresql.Driver();
+        DriverManager.registerDriver(driver);
+        String url = properties.getProperty(DATABASE_URL);
+        String username = properties.getProperty(DATABASE_USER_NAME);
+        String password = properties.getProperty(DATABASE_USER_PASSWORD);
+        log.trace("Returning connection");
+        return DriverManager.getConnection(url, username, password);
     }
 
-    public static String getDatabaseUrl() {
-        return DATABASE_URL;
-    }
-
-    public static String getDatabaseName() {
-        return DATABASE_NAME;
-    }
-
-    public static String getDatabaseUserName() {
-        return DATABASE_USER_NAME;
-    }
-
-    public static String getDatabaseUserPassword() {
-        return DATABASE_USER_PASSWORD;
-    }
 }

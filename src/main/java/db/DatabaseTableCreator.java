@@ -11,8 +11,8 @@ public class DatabaseTableCreator {
             ");";
 
     private static final String CREATE_STUDENTS_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS students (" +
-            "student_id INT PRIMARY KEY," +
-            "group_id INT NOT NULL REFERENCES groups ON UPDATE CASCADE ON DELETE CASCADE," +
+            "student_id SERIAL PRIMARY KEY," +
+            "group_id INT NOT NULL DEFAULT 0 REFERENCES groups ON UPDATE CASCADE ON DELETE CASCADE," +
             "first_name VARCHAR ( 30 ) NOT NULL," +
             "last_name VARCHAR ( 30 ) NOT NULL, " +
             "FOREIGN KEY (group_id) REFERENCES groups (group_id));";

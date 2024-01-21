@@ -7,10 +7,13 @@ import dao.postgres.PostgresSqlStudentDao;
 import db.DatabaseConnector;
 import db.DatabaseTableCreator;
 import db.DatabaseTableDeleter;
+import entity.Student;
+
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public class Application {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         DatabaseConnector databaseConnector = new DatabaseConnector();
         Connection connection = databaseConnector.connectToDatabase();
         DatabaseTableCreator tableCreator = new DatabaseTableCreator();
@@ -29,10 +32,11 @@ public class Application {
         GroupDao groupDao = new PostgresSqlGroupDao();
         groupDao.findAllGroupByStudentId(50);
         studentDao.findStudentsByCourseName("Physics");
-        studentDao.create(202, 2, "Ivan", "Ivanov");
-        studentDao.addStudentToCourse(202, 5);
-        studentDao.addStudentToCourse(202, 6);
-        studentDao.removeStudentFromCourse(202, 5);
+        Student student = new Student(2, "Ivan", "Ivanov");
+        studentDao.create(student);
+        studentDao.addStudentToCourse(2, 5);
+        studentDao.addStudentToCourse(2, 6);
+        studentDao.removeStudentFromCourse(2, 5);
         QueryExecutor queryExecutor = new QueryExecutor();
         queryExecutor.executeQuery(connection);
     }

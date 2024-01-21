@@ -1,6 +1,5 @@
 package dao;
 
-import entity.Course;
 import entity.Group;
 
 import java.util.List;

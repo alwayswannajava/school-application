@@ -3,6 +3,7 @@ package dao.postgres;
 import dao.StudentDao;
 import entity.Student;
 import db.DatabaseConnector;
+import mainClasses.DataGeneratorUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,14 +13,13 @@ import java.util.List;
 
 public class PostgresSqlStudentDao implements StudentDao {
     DatabaseConnector connector = new DatabaseConnector();
+    DataGeneratorUtil dataGenerator = new DataGeneratorUtil();
     private static final String FIND_STUDENTS_BY_COURSE_NAME_QUERY = "select s.student_id, s.group_id," +
             "s.first_name, s.last_name from students_courses\n" +
             "inner join courses c on c.course_id = students_courses.course_id\n" +
             "inner join students s on students_courses.student_id = s.student_id\n" +
             "where course_name = ?;";
-    private static final String CREATE_NEW_STUDENT_QUERY = "insert into students (student_id, group_id, first_name, last_name) values (?, ?, ?, ?);";
     private static final String DROP_STUDENT_BY_ID_QUERY = "delete from students where student_id = ?;";
-    private static final String ADD_STUDENT_TO_COURSE_QUERY = "insert into students_courses (student_id, course_id) values (?, ?);";
     private static final String DROP_STUDENT_BY_COURSE_QUERY = "delete from students_courses where student_id = ? and " +
             "course_id = ?;";
 
@@ -29,154 +29,84 @@ public class PostgresSqlStudentDao implements StudentDao {
     public List<Student> findStudentsByCourseName(String courseName) {
         log.info("Find student by course name: " + courseName);
         List<Student> studentsByCourseNameList = new LinkedList<>();
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            log.trace("Open connection");
-            connection = connector.connectToDatabase();
-            log.trace("Create prepared statement");
-            preparedStatement = connection.prepareStatement(FIND_STUDENTS_BY_COURSE_NAME_QUERY, Statement.RETURN_GENERATED_KEYS);
+        ResultSet resultSet;
+        try(Connection connection = connector.connectToDatabase();
+        PreparedStatement preparedStatement = connection.prepareStatement(FIND_STUDENTS_BY_COURSE_NAME_QUERY)) {
+            log.trace("Opening connection");
+            log.trace("Creating prepared statement");
             preparedStatement.setString(1, courseName);
+            log.trace("Opening result set");
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                int studentId = resultSet.getInt("student_id");
                 int groupId = resultSet.getInt("group_id");
                 String firstName = resultSet.getString("first_name");
                 String lastName = resultSet.getString("last_name");
-                studentsByCourseNameList.add(new Student(studentId, groupId, firstName, lastName));
+                studentsByCourseNameList.add(new Student(groupId, firstName, lastName));
             }
         } catch (SQLException throwables) {
-            log.error("Cannot open connection", throwables);
-        } finally {
-            log.trace("Closing prepared statement");
-            try {
-                preparedStatement.close();
-                log.trace("Prepared statement closed");
-            } catch (SQLException throwables) {
-                log.trace("Cannot close prepared statement", throwables);
-            }
-            log.trace("Closing result set");
-            try {
-                resultSet.close();
-                log.trace("Result set closed");
-            } catch (SQLException throwables) {
-                log.error("Cannot close result set", throwables);
-            }
-            log.trace("Closing connection");
-            try {
-                connection.close();
-                log.trace("Connection closed");
-            } catch (SQLException throwables) {
-                log.error("Cannot close connection", throwables);
-            }
+            log.error("Something went wrong", throwables);
         }
+        log.trace("Closing connection");
+        log.trace("Closing prepared statement");
+        log.trace("Closing result set");
         return studentsByCourseNameList;
     }
 
     @Override
-    public Student create(long studentId, long groupId, String firstName, String lastName) {
+    public Student create(Student student) {
         log.info("Create new student: ");
-        Student student = null;
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            log.trace("Open connection");
-            connection = connector.connectToDatabase();
-            log.trace("Create prepared statement");
-            preparedStatement = connection.prepareStatement(CREATE_NEW_STUDENT_QUERY, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setInt(1, (int) studentId);
-            preparedStatement.setInt(2, (int) groupId);
-            preparedStatement.setString(3, firstName);
-            preparedStatement.setString(4, lastName);
+        Student createdStudent = null;
+        try(Connection connection = connector.connectToDatabase();
+        PreparedStatement preparedStatement = connection.prepareStatement(dataGenerator.getInsertToStudentsTableQuery(), Statement.RETURN_GENERATED_KEYS)) {
+            log.trace("Opening connection");
+            log.trace("Creating prepared statement");
+            preparedStatement.setInt(1, student.getGroupId());
+            preparedStatement.setString(2, student.getFirstName());
+            preparedStatement.setString(3, student.getLastName());
             preparedStatement.execute();
-            try {
+            log.trace("Opening result set");
+            try(ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
                 log.trace("Get result set");
-                resultSet = preparedStatement.getGeneratedKeys();
                 resultSet.next();
                 log.trace("Creating new student");
-                student = new Student(resultSet.getInt("student_id"), resultSet.getInt("group_id"),
+                createdStudent = new Student(resultSet.getInt("group_id"),
                         resultSet.getString("first_name"), resultSet.getString("last_name"));
-                log.info("Student with name " + firstName + " " + lastName + " was succesfully created");
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
+                log.info("Student with name " + student.getFirstName() + " " + student.getLastName() + " was succesfully created");
             }
-
         } catch (SQLException throwables) {
-            log.error("Cannot open connection", throwables);
-        } finally {
-            log.trace("Closing prepared statement");
-            try {
-                preparedStatement.close();
-                log.trace("Prepared statement closed");
-            } catch (SQLException throwables) {
-                log.trace("Cannot close prepared statement", throwables);
-            }
-            log.trace("Closing result set");
-            try {
-                resultSet.close();
-                log.trace("Result set closed");
-            } catch (SQLException throwables) {
-                log.error("Cannot close result set", throwables);
-            }
-            log.trace("Closing connection");
-            try {
-                connection.close();
-                log.trace("Connection closed");
-            } catch (SQLException throwables) {
-                log.error("Cannot close connection", throwables);
-            }
+            log.error("Something went wrong", throwables);
         }
-        return student;
+        log.trace("Closing connection");
+        log.trace("Closing prepared statement");
+        log.trace("Closing result set");
+        return createdStudent;
     }
 
     @Override
     public void deleteStudentById(long studentId) {
-        log.info("Delete student by id: " + studentId);
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            log.trace("Open connection");
-            connection = connector.connectToDatabase();
-            log.trace("Create prepared statement");
-            preparedStatement = connection.prepareStatement(DROP_STUDENT_BY_ID_QUERY, Statement.RETURN_GENERATED_KEYS);
+        log.info("Deleting student by id: " + studentId);
+        try (Connection connection = connector.connectToDatabase();
+        PreparedStatement preparedStatement = connection.prepareStatement(DROP_STUDENT_BY_ID_QUERY)){
+            log.trace("Opening connection");
+            log.trace("Creating prepared statement");
             preparedStatement.setInt(1, (int) studentId);
             log.trace("Deleting student");
             preparedStatement.execute();
             log.info("Student with id " + studentId + " was succesfully deleted");
         } catch (SQLException throwables) {
-            log.error("Cannot open connection", throwables);
-        } finally {
-            log.trace("Closing prepared statement");
-            try {
-                preparedStatement.close();
-                log.trace("Prepared statement closed");
-            } catch (SQLException throwables) {
-                log.trace("Cannot close prepared statement", throwables);
-            }
-            log.trace("Closing connection");
-            try {
-                connection.close();
-                log.trace("Connection closed");
-            } catch (SQLException throwables) {
-                log.error("Cannot close connection", throwables);
-            }
+            log.error("Something went wrong", throwables);
         }
+        log.trace("Closing connection");
+        log.trace("Closing prepared statement");
     }
 
     @Override
     public void addStudentToCourse(long studentId, long courseId) {
         log.info("Adding student to course: ");
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            log.trace("Open connection");
-            connection = connector.connectToDatabase();
-            log.trace("Create prepared statement");
-            preparedStatement = connection.prepareStatement(ADD_STUDENT_TO_COURSE_QUERY, Statement.RETURN_GENERATED_KEYS);
+        try (Connection connection = connector.connectToDatabase();
+        PreparedStatement preparedStatement = connection.prepareStatement(dataGenerator.getInsertToStudentsCoursesTableQuery())){
+            log.trace("Opening connection");
+            log.trace("Creating prepared statement");
             preparedStatement.setInt(1, (int) studentId);
             preparedStatement.setInt(2, (int) courseId);
             log.trace("Adding student to course");
@@ -184,35 +114,18 @@ public class PostgresSqlStudentDao implements StudentDao {
             log.info("Student with student_id " + studentId + " was successfully added to course " + courseId);
         } catch (SQLException throwables) {
             log.error("Cannot open connection", throwables);
-        } finally {
-            log.trace("Closing prepared statement");
-            try {
-                preparedStatement.close();
-                log.trace("Prepared statement closed");
-            } catch (SQLException throwables) {
-                log.trace("Cannot close prepared statement", throwables);
-            }
-            log.trace("Closing connection");
-            try {
-                connection.close();
-                log.trace("Connection closed");
-            } catch (SQLException throwables) {
-                log.error("Cannot close connection", throwables);
-            }
         }
+        log.trace("Closing connection");
+        log.trace("Closing prepared statement");
     }
 
     @Override
     public void removeStudentFromCourse(long studentId, long courseId) {
         log.info("Delete student from course: " + courseId);
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
+        try(Connection connection = connector.connectToDatabase();
+        PreparedStatement preparedStatement = connection.prepareStatement(DROP_STUDENT_BY_COURSE_QUERY)){
             log.trace("Open connection");
-            connection = connector.connectToDatabase();
             log.trace("Create prepared statement");
-            preparedStatement = connection.prepareStatement(DROP_STUDENT_BY_COURSE_QUERY, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, (int) studentId);
             preparedStatement.setInt(2, (int) courseId);
             log.trace("Deleting student from course");
@@ -220,21 +133,8 @@ public class PostgresSqlStudentDao implements StudentDao {
             log.info("Student with student_id " + studentId + " was successfully removed from course " + courseId);
         } catch (SQLException throwables) {
             log.error("Cannot open connection", throwables);
-        } finally {
-            log.trace("Closing prepared statement");
-            try {
-                preparedStatement.close();
-                log.trace("Prepared statement closed");
-            } catch (SQLException throwables) {
-                log.trace("Cannot close prepared statement", throwables);
-            }
-            log.trace("Closing connection");
-            try {
-                connection.close();
-                log.trace("Connection closed");
-            } catch (SQLException throwables) {
-                log.error("Cannot close connection", throwables);
-            }
         }
+        log.trace("Closing connection");
+        log.trace("Closing prepared statement");
     }
 }

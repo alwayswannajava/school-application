@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface StudentDao {
     List<Student> findStudentsByCourseName(String courseName);
 
-    Student create(long studentId, long groupId, String firstName, String lastName);
+    Student create(Student student);
 
     void deleteStudentById(long studentId);
 
