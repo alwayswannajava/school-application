@@ -7,14 +7,9 @@ import dao.postgres.PostgresSqlStudentDao;
 import db.DatabaseConnector;
 import db.DatabaseTableCreator;
 import db.DatabaseTableDeleter;
-import entity.Course;
-import entity.Group;
 import entity.Student;
-
-import java.util.List;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Set;
 
 public class Application {
     public static void main(String[] args) throws SQLException {
@@ -26,12 +21,12 @@ public class Application {
         tableDeleter.dropDatabaseTables(connection);
         tableCreator.createDatabaseTables(connection);
         DataGeneratorUtil dataGenerator = new DataGeneratorUtil();
-        Set<Group> generatedGroups = dataGenerator.generateGroups();
-        List<Course> generatedCourses = dataGenerator.generateCourses();
-        Set<Student> generatedStudents = dataGenerator.generateStudents();
-        dataGenerator.addGeneratedGroupsToDatabase(generatedGroups);
-        dataGenerator.addGeneratedCoursesToDatabase(generatedCourses);
-        dataGenerator.addGeneratedStudentsToDatabase(generatedStudents);
+        dataGenerator.generateGroups();
+        dataGenerator.generateCourses();
+        dataGenerator.generateStudents();
+        dataGenerator.addGeneratedGroupsToDatabase();
+        dataGenerator.addGeneratedCoursesToDatabase();
+        dataGenerator.addGeneratedStudentsToDatabase();
         dataGenerator.setRandomCoursesForStudents();
         StudentDao studentDao = new PostgresSqlStudentDao();
         GroupDao groupDao = new PostgresSqlGroupDao();

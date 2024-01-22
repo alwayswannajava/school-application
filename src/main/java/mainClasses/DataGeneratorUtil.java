@@ -14,6 +14,9 @@ import java.util.*;
 public class DataGeneratorUtil {
     private static final DatabaseConnector connector = new DatabaseConnector();
     private static final String GENERATE_GROUP_NAME_REGEX_PATTERN = "([A-Z]{2})-([0-9]{2})";
+    private Set<Group> generatedGroups = new HashSet<>();
+    private List<Course> generatedCourses = new ArrayList<>();
+    private Set<Student> generatedStudents = new HashSet<>();
     private static final String INSERT_TO_GROUP_TABLE_QUERY = "INSERT INTO groups (group_id, group_name) values (?, ?);";
     private static final String INSERT_TO_COURSES_TABLE_QUERY = "INSERT INTO courses (course_id, course_name, course_description) values (?, ?, ?);";
     public static final String INSERT_TO_STUDENTS_TABLE_QUERY = "INSERT INTO students (group_id, first_name, last_name) values (?, ?, ?)";
@@ -26,7 +29,6 @@ public class DataGeneratorUtil {
 
     public Set<Group> generateGroups() {
         Faker faker = new Faker();
-        Set<Group> generatedGroups = new HashSet<>();
         generatedGroups.add(new Group(0, "Empty_group"));
         generatedGroups.add(new Group(1, faker.regexify(GENERATE_GROUP_NAME_REGEX_PATTERN)));
         generatedGroups.add(new Group(2, faker.regexify(GENERATE_GROUP_NAME_REGEX_PATTERN)));
@@ -42,7 +44,6 @@ public class DataGeneratorUtil {
     }
 
     public List<Course> generateCourses() {
-        List<Course> generatedCourses = new ArrayList<>();
         generatedCourses.add(new Course(1, "Math", "Math course"));
         generatedCourses.add(new Course(2, "Physical Education", "Physical education course"));
         generatedCourses.add(new Course(3, "Physics", "Physics course"));
@@ -57,7 +58,6 @@ public class DataGeneratorUtil {
     }
 
     public Set<Student> generateStudents() {
-        Set<Student> generatedStudents = new HashSet<>();
         Faker faker = new Faker();
         Random random = new Random();
         int countStudents;
@@ -78,7 +78,7 @@ public class DataGeneratorUtil {
         return generatedStudents;
     }
 
-    public void addGeneratedGroupsToDatabase(Set<Group> generatedGroups) {
+    public void addGeneratedGroupsToDatabase() {
         try (Connection connection = connector.connectToDatabase();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_TO_GROUP_TABLE_QUERY)) {
             for (Group currentInfoGroup : generatedGroups) {
@@ -93,7 +93,7 @@ public class DataGeneratorUtil {
         }
     }
 
-    public void addGeneratedCoursesToDatabase(List<Course> generatedCourses) {
+    public void addGeneratedCoursesToDatabase() {
         try (Connection connection = connector.connectToDatabase();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_TO_COURSES_TABLE_QUERY)) {
             for (Course currentCourse : generatedCourses) {
@@ -110,7 +110,7 @@ public class DataGeneratorUtil {
         }
     }
 
-    public void addGeneratedStudentsToDatabase(Set<Student> generatedStudents) {
+    public void addGeneratedStudentsToDatabase() {
         try (Connection connection = connector.connectToDatabase();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_TO_STUDENTS_TABLE_QUERY)) {
             for (Student currentStudent : generatedStudents) {
