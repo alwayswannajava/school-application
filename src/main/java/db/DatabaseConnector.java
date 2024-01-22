@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -17,20 +16,18 @@ public class DatabaseConnector {
     private static final String DATABASE_USER_NAME = "db.username";
     private static final String DATABASE_USER_PASSWORD = "db.password";
     private static Logger log = LogManager.getLogger(DatabaseConnector.class);
+    private static final Properties properties = new Properties();
 
-
-    public Connection connectToDatabase() throws SQLException {
+    public void readDatabaseFileProperties() {
         log.trace("Creating database properties");
-        Properties properties = new Properties();
         try(InputStream inputStreamProperties = new FileInputStream(PROPERTIES_FILE_PATH)) {
             properties.load(inputStreamProperties);
+        }  catch (IOException e) {
+           log.error("Something went wrong ", e);
         }
-        catch (IOException e) {
-            log.error("Something went wrong ", e);
-        }
-        log.trace("Register new postgreSQL driver");
-        Driver driver = new org.postgresql.Driver();
-        DriverManager.registerDriver(driver);
+    }
+
+    public Connection connectToDatabase() throws SQLException {
         String url = properties.getProperty(DATABASE_URL);
         String username = properties.getProperty(DATABASE_USER_NAME);
         String password = properties.getProperty(DATABASE_USER_PASSWORD);

@@ -13,7 +13,6 @@ import java.util.List;
 
 public class PostgresSqlStudentDao implements StudentDao {
     DatabaseConnector connector = new DatabaseConnector();
-    DataGeneratorUtil dataGenerator = new DataGeneratorUtil();
     private static final String FIND_STUDENTS_BY_COURSE_NAME_QUERY = "select s.student_id, s.group_id," +
             "s.first_name, s.last_name from students_courses\n" +
             "inner join courses c on c.course_id = students_courses.course_id\n" +
@@ -46,9 +45,7 @@ public class PostgresSqlStudentDao implements StudentDao {
         } catch (SQLException throwables) {
             log.error("Something went wrong", throwables);
         }
-        log.trace("Closing connection");
-        log.trace("Closing prepared statement");
-        log.trace("Closing result set");
+        log.trace("Closing connection, prepared statement, result set");
         return studentsByCourseNameList;
     }
 
@@ -57,7 +54,7 @@ public class PostgresSqlStudentDao implements StudentDao {
         log.info("Create new student: ");
         Student createdStudent = null;
         try(Connection connection = connector.connectToDatabase();
-        PreparedStatement preparedStatement = connection.prepareStatement(dataGenerator.getInsertToStudentsTableQuery(), Statement.RETURN_GENERATED_KEYS)) {
+        PreparedStatement preparedStatement = connection.prepareStatement(DataGeneratorUtil.INSERT_TO_STUDENTS_TABLE_QUERY, Statement.RETURN_GENERATED_KEYS)) {
             log.trace("Opening connection");
             log.trace("Creating prepared statement");
             preparedStatement.setInt(1, student.getGroupId());
@@ -76,9 +73,7 @@ public class PostgresSqlStudentDao implements StudentDao {
         } catch (SQLException throwables) {
             log.error("Something went wrong", throwables);
         }
-        log.trace("Closing connection");
-        log.trace("Closing prepared statement");
-        log.trace("Closing result set");
+        log.trace("Closing connection, prepared statement, result set");
         return createdStudent;
     }
 
@@ -96,15 +91,14 @@ public class PostgresSqlStudentDao implements StudentDao {
         } catch (SQLException throwables) {
             log.error("Something went wrong", throwables);
         }
-        log.trace("Closing connection");
-        log.trace("Closing prepared statement");
+        log.trace("Closing connection, prepared statement");
     }
 
     @Override
     public void addStudentToCourse(long studentId, long courseId) {
         log.info("Adding student to course: ");
         try (Connection connection = connector.connectToDatabase();
-        PreparedStatement preparedStatement = connection.prepareStatement(dataGenerator.getInsertToStudentsCoursesTableQuery())){
+        PreparedStatement preparedStatement = connection.prepareStatement(DataGeneratorUtil.INSERT_TO_STUDENTS_COURSES_TABLE_QUERY)){
             log.trace("Opening connection");
             log.trace("Creating prepared statement");
             preparedStatement.setInt(1, (int) studentId);
@@ -113,10 +107,9 @@ public class PostgresSqlStudentDao implements StudentDao {
             preparedStatement.execute();
             log.info("Student with student_id " + studentId + " was successfully added to course " + courseId);
         } catch (SQLException throwables) {
-            log.error("Cannot open connection", throwables);
+            log.error("Something went wrong", throwables);
         }
-        log.trace("Closing connection");
-        log.trace("Closing prepared statement");
+        log.trace("Closing connection, prepared statement");
     }
 
     @Override
@@ -132,9 +125,8 @@ public class PostgresSqlStudentDao implements StudentDao {
             preparedStatement.execute();
             log.info("Student with student_id " + studentId + " was successfully removed from course " + courseId);
         } catch (SQLException throwables) {
-            log.error("Cannot open connection", throwables);
+            log.error("Something went wrong", throwables);
         }
-        log.trace("Closing connection");
-        log.trace("Closing prepared statement");
+        log.trace("Closing connection, prepared statement");
     }
 }

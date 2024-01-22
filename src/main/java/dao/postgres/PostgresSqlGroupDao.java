@@ -38,9 +38,7 @@ public class PostgresSqlGroupDao implements GroupDao {
         } catch (SQLException throwables) {
             log.error("Something went wrong", throwables);
         }
-        log.trace("Closing connection");
-        log.trace("Closing prepared statement");
-        log.trace("Closing result set");
+        log.trace("Closing connection, prepared statement, result set");
         return groupsByStudentIdList;
     }
 }
