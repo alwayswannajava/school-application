@@ -31,17 +31,17 @@ public class Application {
         dataGenerator.addGeneratedCoursesToDatabase();
         dataGenerator.addGeneratedStudentsToDatabase();
         StudentDao studentDao = new PostgresSqlStudentDao();
-//        dataGenerator.setRandomCoursesForStudents();
-//        StudentDao studentDao = new PostgresSqlStudentDao();
-//        GroupDao groupDao = new PostgresSqlGroupDao();
-//        groupDao.findAllGroupByStudentId(50);
-//        studentDao.findStudentsByCourseName("History");
-//        Student student = new Student(2, "Ivan", "Ivanov");
-//        studentDao.create(student);
-//        studentDao.addStudentToCourse(2, 5);
-//        studentDao.addStudentToCourse(2, 6);
-//        studentDao.removeStudentFromCourse(2, 5);
-//        QueryExecutor queryExecutor = new QueryExecutor();
-//        queryExecutor.executeQuery();
+        dataGenerator.setRandomCoursesForStudents();
+        StudentDao studentDao = new PostgresSqlStudentDao();
+        GroupDao groupDao = new PostgresSqlGroupDao();
+        groupDao.findAllGroupByStudentId(50);
+        studentDao.findStudentsByCourseName("History");
+        Student student = new Student(2, "Ivan", "Ivanov");
+        studentDao.create(student);
+        studentDao.addStudentToCourse(2, 5);
+        studentDao.addStudentToCourse(2, 6);
+        studentDao.removeStudentFromCourse(2, 5);
+        QueryExecutor queryExecutor = new QueryExecutor();
+        queryExecutor.executeQuery();
     }
 }
