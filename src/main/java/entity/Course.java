@@ -1,5 +1,7 @@
 package entity;
 
+import java.util.Objects;
+
 public class Course {
     private int courseId;
     private String courseName;
@@ -34,4 +36,18 @@ public class Course {
     public void setCourseDescription(String courseDescription) {
         this.courseDescription = courseDescription;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Course)) return false;
+        Course course = (Course) o;
+        return courseId == course.courseId && Objects.equals(courseName, course.courseName) && Objects.equals(courseDescription, course.courseDescription);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(courseId, courseName, courseDescription);
+    }
+
 }

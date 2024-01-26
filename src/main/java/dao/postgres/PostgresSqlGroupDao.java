@@ -24,8 +24,7 @@ public class PostgresSqlGroupDao implements GroupDao {
         ResultSet resultSet;
         try (Connection connection = connector.connectToDatabase();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALLGROUP_BY_STUDENT_ID_QUERY)) {
-            log.trace("Open connection");
-            log.trace("Create prepared statement");
+            log.trace("Opening connection, creating prepared statement");
             preparedStatement.setInt(1, (int) studentId);
             resultSet = preparedStatement.executeQuery();
             log.trace("Create result set");

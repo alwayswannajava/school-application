@@ -13,7 +13,7 @@ import java.util.List;
 
 public class PostgresSqlStudentDao implements StudentDao {
     DatabaseConnector connector = new DatabaseConnector();
-    private static final String FIND_STUDENTS_BY_COURSE_NAME_QUERY = "select s.student_id, s.group_id," +
+    public static final String FIND_STUDENTS_BY_COURSE_NAME_QUERY = "select s.student_id, s.group_id," +
             "s.first_name, s.last_name from students_courses\n" +
             "inner join courses c on c.course_id = students_courses.course_id\n" +
             "inner join students s on students_courses.student_id = s.student_id\n" +
@@ -31,8 +31,7 @@ public class PostgresSqlStudentDao implements StudentDao {
         ResultSet resultSet;
         try(Connection connection = connector.connectToDatabase();
         PreparedStatement preparedStatement = connection.prepareStatement(FIND_STUDENTS_BY_COURSE_NAME_QUERY)) {
-            log.trace("Opening connection");
-            log.trace("Creating prepared statement");
+            log.trace("Opening connection, creating prepared statement");
             preparedStatement.setString(1, courseName);
             log.trace("Opening result set");
             resultSet = preparedStatement.executeQuery();
@@ -55,8 +54,7 @@ public class PostgresSqlStudentDao implements StudentDao {
         Student createdStudent = null;
         try(Connection connection = connector.connectToDatabase();
         PreparedStatement preparedStatement = connection.prepareStatement(DataGeneratorUtil.INSERT_TO_STUDENTS_TABLE_QUERY, Statement.RETURN_GENERATED_KEYS)) {
-            log.trace("Opening connection");
-            log.trace("Creating prepared statement");
+            log.trace("Opening connection, creating prepared statement");
             preparedStatement.setInt(1, student.getGroupId());
             preparedStatement.setString(2, student.getFirstName());
             preparedStatement.setString(3, student.getLastName());
@@ -82,8 +80,7 @@ public class PostgresSqlStudentDao implements StudentDao {
         log.info("Deleting student by id: " + studentId);
         try (Connection connection = connector.connectToDatabase();
         PreparedStatement preparedStatement = connection.prepareStatement(DROP_STUDENT_BY_ID_QUERY)){
-            log.trace("Opening connection");
-            log.trace("Creating prepared statement");
+            log.trace("Opening connection, creating prepared statement");
             preparedStatement.setInt(1, (int) studentId);
             log.trace("Deleting student");
             preparedStatement.execute();
@@ -99,8 +96,7 @@ public class PostgresSqlStudentDao implements StudentDao {
         log.info("Adding student to course: ");
         try (Connection connection = connector.connectToDatabase();
         PreparedStatement preparedStatement = connection.prepareStatement(DataGeneratorUtil.INSERT_TO_STUDENTS_COURSES_TABLE_QUERY)){
-            log.trace("Opening connection");
-            log.trace("Creating prepared statement");
+            log.trace("Opening connection, creating prepared statement");
             preparedStatement.setInt(1, (int) studentId);
             preparedStatement.setInt(2, (int) courseId);
             log.trace("Adding student to course");
@@ -117,8 +113,7 @@ public class PostgresSqlStudentDao implements StudentDao {
         log.info("Delete student from course: " + courseId);
         try(Connection connection = connector.connectToDatabase();
         PreparedStatement preparedStatement = connection.prepareStatement(DROP_STUDENT_BY_COURSE_QUERY)){
-            log.trace("Open connection");
-            log.trace("Create prepared statement");
+            log.trace("Opening connection, creating prepared statement");
             preparedStatement.setInt(1, (int) studentId);
             preparedStatement.setInt(2, (int) courseId);
             log.trace("Deleting student from course");

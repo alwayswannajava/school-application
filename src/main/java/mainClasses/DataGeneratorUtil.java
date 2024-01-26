@@ -17,12 +17,12 @@ public class DataGeneratorUtil {
     private Set<Group> generatedGroups = new HashSet<>();
     private List<Course> generatedCourses = new ArrayList<>();
     private Set<Student> generatedStudents = new HashSet<>();
-    private static final String INSERT_TO_GROUP_TABLE_QUERY = "INSERT INTO groups (group_id, group_name) values (?, ?);";
-    private static final String INSERT_TO_COURSES_TABLE_QUERY = "INSERT INTO courses (course_id, course_name, course_description) values (?, ?, ?);";
+    public static final String INSERT_TO_GROUP_TABLE_QUERY = "INSERT INTO groups (group_id, group_name) values (?, ?);";
+    public static final String INSERT_TO_COURSES_TABLE_QUERY = "INSERT INTO courses (course_id, course_name, course_description) values (?, ?, ?);";
     public static final String INSERT_TO_STUDENTS_TABLE_QUERY = "INSERT INTO students (group_id, first_name, last_name) values (?, ?, ?)";
     public static final String INSERT_TO_STUDENTS_COURSES_TABLE_QUERY = "INSERT INTO students_courses (student_id, course_id) values (?, ?)";
     private static final int RANDOM_GENERATED_STUDENTS_COUNT_RANGE = 20;
-    private static final int COUNT_RANDOM_GENERATED_COURSES_REGEX = 3;
+    private static final int COUNT_RANDOM_GENERATED_COURSES_RANGE = 3;
     private static final int ID_RANDOM_COURSE_RANGE = 9;
     private static final int ID_RANDOM_GROUP_RANGE = 10;
     private static final int MAX_COUNT_STUDENTS = 200;
@@ -133,9 +133,9 @@ public class DataGeneratorUtil {
         Set<Integer> lastIdRandomCourseSet = new HashSet<>();
         try (Connection connection = connector.connectToDatabase();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_TO_STUDENTS_COURSES_TABLE_QUERY)) {
-            for (int currentStudentId = 0; currentStudentId < 200; currentStudentId++) {
+            for (int currentStudentId = 0; currentStudentId < MAX_COUNT_STUDENTS; currentStudentId++) {
                 lastIdRandomCourseSet.clear();
-                int countRandomCourses = random.nextInt(COUNT_RANDOM_GENERATED_COURSES_REGEX) + 1;
+                int countRandomCourses = random.nextInt(COUNT_RANDOM_GENERATED_COURSES_RANGE) + 1;
                 for (int j = 0; j < countRandomCourses; j++) {
                     idRandomCourse = random.nextInt(ID_RANDOM_COURSE_RANGE) + 1;
                     while (lastIdRandomCourseSet.contains(idRandomCourse)) {

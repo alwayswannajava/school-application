@@ -7,7 +7,10 @@ import dao.postgres.PostgresSqlStudentDao;
 import db.DatabaseConnector;
 import db.DatabaseTableCreator;
 import db.DatabaseTableDeleter;
+import entity.Group;
 import entity.Student;
+
+import java.util.List;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -27,17 +30,18 @@ public class Application {
         dataGenerator.addGeneratedGroupsToDatabase();
         dataGenerator.addGeneratedCoursesToDatabase();
         dataGenerator.addGeneratedStudentsToDatabase();
-        dataGenerator.setRandomCoursesForStudents();
         StudentDao studentDao = new PostgresSqlStudentDao();
-        GroupDao groupDao = new PostgresSqlGroupDao();
-        groupDao.findAllGroupByStudentId(50);
-        studentDao.findStudentsByCourseName("Physics");
-        Student student = new Student(2, "Ivan", "Ivanov");
-        studentDao.create(student);
-        studentDao.addStudentToCourse(2, 5);
-        studentDao.addStudentToCourse(2, 6);
-        studentDao.removeStudentFromCourse(2, 5);
-        QueryExecutor queryExecutor = new QueryExecutor();
-        queryExecutor.executeQuery();
+//        dataGenerator.setRandomCoursesForStudents();
+//        StudentDao studentDao = new PostgresSqlStudentDao();
+//        GroupDao groupDao = new PostgresSqlGroupDao();
+//        groupDao.findAllGroupByStudentId(50);
+//        studentDao.findStudentsByCourseName("History");
+//        Student student = new Student(2, "Ivan", "Ivanov");
+//        studentDao.create(student);
+//        studentDao.addStudentToCourse(2, 5);
+//        studentDao.addStudentToCourse(2, 6);
+//        studentDao.removeStudentFromCourse(2, 5);
+//        QueryExecutor queryExecutor = new QueryExecutor();
+//        queryExecutor.executeQuery();
     }
 }
