@@ -51,6 +51,7 @@ class PostgresSqlStudentDaoTest {
         try(Connection connection = connector.connectToDatabase();
             PreparedStatement preparedStatement = connection.prepareStatement(TRUNCATE_STUDENTS_TABLE_QUERY)) {
             preparedStatement.execute();
+            connection.rollback();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -90,6 +91,7 @@ class PostgresSqlStudentDaoTest {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             countStudentsAfterDeleting = resultSet.getInt(1);
+            connection.rollback();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -133,6 +135,7 @@ class PostgresSqlStudentDaoTest {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             countStudentsAfterRemoving = resultSet.getInt(1);
+            connection.rollback();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
