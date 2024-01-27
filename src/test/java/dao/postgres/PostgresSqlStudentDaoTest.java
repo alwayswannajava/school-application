@@ -24,7 +24,7 @@ class PostgresSqlStudentDaoTest {
     public static DatabaseConnector connector = new DatabaseConnector();
     private static final String COUNT_STUDENTS_QUERY = "select count(*) from students;";
     private static final String COUNT_STUDENTS_COURSES_RECORDS_QUERY = "select count(*) from students_courses;";
-
+    private static final String TRUNCATE_STUDENTS_TABLE_QUERY = "truncate table students cascade;";
 
     @BeforeAll
     public static void setUp() throws SQLException {
@@ -49,7 +49,7 @@ class PostgresSqlStudentDaoTest {
         expectedStudentsByCourseNameList.add(new Student(3, "Petya", "Petrov"));
         List<Student> actualStudentsByCourseNameList = studentDao.findStudentsByCourseName("History");
         try(Connection connection = connector.connectToDatabase();
-            PreparedStatement preparedStatement = connection.prepareStatement("truncate table students cascade;")) {
+            PreparedStatement preparedStatement = connection.prepareStatement(TRUNCATE_STUDENTS_TABLE_QUERY)) {
             preparedStatement.execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();

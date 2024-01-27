@@ -7,10 +7,7 @@ import dao.postgres.PostgresSqlStudentDao;
 import db.DatabaseConnector;
 import db.DatabaseTableCreator;
 import db.DatabaseTableDeleter;
-import entity.Group;
 import entity.Student;
-
-import java.util.List;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -30,6 +27,7 @@ public class Application {
         dataGenerator.addGeneratedGroupsToDatabase();
         dataGenerator.addGeneratedCoursesToDatabase();
         dataGenerator.addGeneratedStudentsToDatabase();
+        dataGenerator.setRandomCoursesForStudents();
         dataGenerator.setRandomCoursesForStudents();
         StudentDao studentDao = new PostgresSqlStudentDao();
         GroupDao groupDao = new PostgresSqlGroupDao();
