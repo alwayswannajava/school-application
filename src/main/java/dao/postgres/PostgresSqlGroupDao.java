@@ -1,8 +1,10 @@
 package dao.postgres;
 
 import dao.GroupDao;
+import entity.Course;
 import entity.Group;
 import db.DatabaseConnector;
+import mainClasses.DataGeneratorUtil;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
@@ -39,5 +41,31 @@ public class PostgresSqlGroupDao implements GroupDao {
         }
         log.trace("Closing connection, prepared statement, result set");
         return groupsByStudentIdList;
+    }
+
+    @Override
+    public Group create(Group group) {
+        log.info("Create new group: ");
+        Group createdGroup = null;
+        try (Connection connection = connector.connectToDatabase();
+             PreparedStatement preparedStatement = connection.prepareStatement(DataGeneratorUtil.INSERT_TO_GROUP_TABLE_QUERY, Statement.RETURN_GENERATED_KEYS)) {
+            log.trace("Opening connection, creating prepared statement");
+            preparedStatement.setInt(1, group.getGroupId());
+            preparedStatement.setString(2, group.getGroupName());
+            preparedStatement.execute();
+            log.trace("Opening result set");
+            try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
+                log.trace("Get result set");
+                resultSet.next();
+                log.trace("Creating new group");
+                createdGroup = new Group(resultSet.getInt("group_id"),
+                        resultSet.getString("group_name"));
+                log.info("Group " + group.getGroupName() + " was succesfully created");
+            }
+        } catch (SQLException throwables) {
+            log.error("Something went wrong", throwables);
+        }
+        log.trace("Closing connection, prepared statement, result set");
+        return createdGroup;
     }
 }
