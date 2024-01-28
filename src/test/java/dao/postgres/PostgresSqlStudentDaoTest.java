@@ -9,7 +9,6 @@ import db.DatabaseTableDeleter;
 import entity.Course;
 import entity.Group;
 import entity.Student;
-import mainClasses.DataGeneratorUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,10 +20,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PostgresSqlStudentDaoTest {
-    public static DatabaseConnector connector = new DatabaseConnector();
+    public static final DatabaseConnector connector = new DatabaseConnector();
     private static final String COUNT_STUDENTS_QUERY = "select count(*) from students;";
     private static final String COUNT_STUDENTS_COURSES_RECORDS_QUERY = "select count(*) from students_courses;";
     private static final String TRUNCATE_STUDENTS_TABLE_QUERY = "truncate table students cascade;";
+    private static final String TRUNCATE_STUDENTS_COURSES_TABLE_QUERY = "truncate table students_courses cascade";
 
     @BeforeAll
     public static void setUp() throws SQLException {
@@ -43,15 +43,14 @@ class PostgresSqlStudentDaoTest {
     @Test
     public void testCorrectFindingStudentsByCourseName() {
         StudentDao studentDao = new PostgresSqlStudentDao();
-        studentDao.create(new Student(3, "Petya", "Petrov"));
-        studentDao.addStudentToCourse(2, 1);
+        studentDao.create(new Student(3, "Ivan", "Ivanov"));
+        studentDao.addStudentToCourse(1, 1);
         List<Student> expectedStudentsByCourseNameList = new ArrayList<>();
-        expectedStudentsByCourseNameList.add(new Student(3, "Petya", "Petrov"));
+        expectedStudentsByCourseNameList.add(new Student(3, "Ivan", "Ivanov"));
         List<Student> actualStudentsByCourseNameList = studentDao.findStudentsByCourseName("History");
         try(Connection connection = connector.connectToDatabase();
-            PreparedStatement preparedStatement = connection.prepareStatement(TRUNCATE_STUDENTS_TABLE_QUERY)) {
-            preparedStatement.execute();
-            connection.rollback();
+            PreparedStatement deleteStatement = connection.prepareStatement(TRUNCATE_STUDENTS_TABLE_QUERY)) {
+            deleteStatement.execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -62,18 +61,15 @@ class PostgresSqlStudentDaoTest {
     @Test
     public void testCorrectCreateStudent() {
         int countStudentsAfterCreating = 0;
-        try (Connection connection = connector.connectToDatabase();
-             PreparedStatement preparedCountStatement = connection.prepareStatement(COUNT_STUDENTS_QUERY);
-             PreparedStatement preparedCreateStatement = connection.prepareStatement(DataGeneratorUtil.INSERT_TO_STUDENTS_TABLE_QUERY)) {
-            connection.setAutoCommit(false);
-            preparedCreateStatement.setInt(1, 3);
-            preparedCreateStatement.setString(2, "Ivan");
-            preparedCreateStatement.setString(3, "Ivanov");
-            preparedCreateStatement.execute();
+        StudentDao studentDao = new PostgresSqlStudentDao();
+        studentDao.create(new Student(3, "Ivan", "Ivanov"));
+        try(Connection connection = connector.connectToDatabase();
+            PreparedStatement preparedCountStatement = connection.prepareStatement(COUNT_STUDENTS_QUERY);
+            PreparedStatement deleteStatement = connection.prepareStatement(TRUNCATE_STUDENTS_TABLE_QUERY)) {
             ResultSet resultSet = preparedCountStatement.executeQuery();
-            connection.commit();
             resultSet.next();
             countStudentsAfterCreating = resultSet.getInt(1);
+            deleteStatement.execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -91,7 +87,6 @@ class PostgresSqlStudentDaoTest {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             countStudentsAfterDeleting = resultSet.getInt(1);
-            connection.rollback();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -102,22 +97,16 @@ class PostgresSqlStudentDaoTest {
     @Test
     public void testCorrectAddingStudentToCourse() {
         int countStudentsAfterAdding = 0;
+        StudentDao studentDao = new PostgresSqlStudentDao();
+        studentDao.create(new Student(3, "Ivan", "Ivanov"));
+        studentDao.addStudentToCourse(1, 1);
         try (Connection connection = connector.connectToDatabase();
-             PreparedStatement preparedStatement = connection.prepareStatement(COUNT_STUDENTS_COURSES_RECORDS_QUERY);
-             PreparedStatement preparedCreateStudentCourseStatement = connection.prepareStatement(DataGeneratorUtil.INSERT_TO_STUDENTS_COURSES_TABLE_QUERY);
-             PreparedStatement preparedCreateStudentStatement = connection.prepareStatement(DataGeneratorUtil.INSERT_TO_STUDENTS_TABLE_QUERY)) {
-            connection.setAutoCommit(false);
-            preparedCreateStudentStatement.setInt(1, 3);
-            preparedCreateStudentStatement.setString(2, "Ivan");
-            preparedCreateStudentStatement.setString(3, "Ivanov");
-            preparedCreateStudentStatement.execute();
-            preparedCreateStudentCourseStatement.setInt(1, 1);
-            preparedCreateStudentCourseStatement.setInt(2, 1);
-            preparedCreateStudentCourseStatement.execute();
+             PreparedStatement deleteStatement = connection.prepareStatement(TRUNCATE_STUDENTS_COURSES_TABLE_QUERY);
+             PreparedStatement preparedStatement = connection.prepareStatement(COUNT_STUDENTS_COURSES_RECORDS_QUERY)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             countStudentsAfterAdding = resultSet.getInt(1);
-            connection.rollback();
+            deleteStatement.execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -131,11 +120,12 @@ class PostgresSqlStudentDaoTest {
         try (Connection connection = connector.connectToDatabase();
              PreparedStatement preparedStatement = connection.prepareStatement(COUNT_STUDENTS_COURSES_RECORDS_QUERY)) {
             StudentDao studentDao = new PostgresSqlStudentDao();
-            studentDao.removeStudentFromCourse(1, 5);
+            studentDao.create(new Student(3, "Ivan", "Ivanov"));
+            studentDao.addStudentToCourse(1, 1);
+            studentDao.removeStudentFromCourse(1, 1);
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             countStudentsAfterRemoving = resultSet.getInt(1);
-            connection.rollback();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

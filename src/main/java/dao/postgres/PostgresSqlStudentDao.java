@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class PostgresSqlStudentDao implements StudentDao {
-    DatabaseConnector connector = new DatabaseConnector();
+    private DatabaseConnector connector = new DatabaseConnector();
     public static final String FIND_STUDENTS_BY_COURSE_NAME_QUERY = "select s.student_id, s.group_id," +
             "s.first_name, s.last_name from students_courses\n" +
             "inner join courses c on c.course_id = students_courses.course_id\n" +
