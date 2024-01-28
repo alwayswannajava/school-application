@@ -64,12 +64,10 @@ class PostgresSqlStudentDaoTest {
         StudentDao studentDao = new PostgresSqlStudentDao();
         studentDao.create(new Student(3, "Ivan", "Ivanov"));
         try(Connection connection = connector.connectToDatabase();
-            PreparedStatement preparedCountStatement = connection.prepareStatement(COUNT_STUDENTS_QUERY);
-            PreparedStatement deleteStatement = connection.prepareStatement(TRUNCATE_STUDENTS_TABLE_QUERY)) {
+            PreparedStatement preparedCountStatement = connection.prepareStatement(COUNT_STUDENTS_QUERY)) {
             ResultSet resultSet = preparedCountStatement.executeQuery();
             resultSet.next();
             countStudentsAfterCreating = resultSet.getInt(1);
-            deleteStatement.execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
