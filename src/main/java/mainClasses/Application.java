@@ -8,14 +8,13 @@ import db.DatabaseConnector;
 import db.DatabaseTableCreator;
 import db.DatabaseTableDeleter;
 import entity.Student;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 public class Application {
     public static void main(String[] args) throws SQLException {
         DatabaseConnector databaseConnector = new DatabaseConnector();
         databaseConnector.readDatabaseFileProperties();
-        Connection connection = databaseConnector.connectToDatabase();
+        databaseConnector.connectToDatabase();
         DatabaseTableCreator tableCreator = new DatabaseTableCreator();
         DatabaseTableDeleter tableDeleter = new DatabaseTableDeleter();
         tableDeleter.dropDatabaseTables();
