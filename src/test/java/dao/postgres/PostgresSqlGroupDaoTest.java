@@ -24,8 +24,8 @@ class PostgresSqlGroupDaoTest {
         connector.readDatabaseFileProperties();
         DatabaseTableDeleter tableDeleter = new DatabaseTableDeleter();
         DatabaseTableCreator tableCreator = new DatabaseTableCreator();
-        tableDeleter.dropDatabaseTables(connector.connectToDatabase());
-        tableCreator.createDatabaseTables(connector.connectToDatabase());
+        tableDeleter.dropDatabaseTables();
+        tableCreator.createDatabaseTables();
     }
 
     @DisplayName("Test find all group by student id query")
@@ -53,5 +53,8 @@ class PostgresSqlGroupDaoTest {
         GroupDao groupDao = new PostgresSqlGroupDao();
         List<Group> actualGroupsByStudentIdList = groupDao.findAllGroupByStudentId(1);
         assertEquals(expectedGroupsByStudentIdList, actualGroupsByStudentIdList);
+        expectedGroupsByStudentIdList.clear();
+        actualGroupsByStudentIdList.clear();
+        groupDao.deleteGroupById(3);
     }
 }

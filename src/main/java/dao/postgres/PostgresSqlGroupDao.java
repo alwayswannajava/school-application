@@ -18,6 +18,7 @@ public class PostgresSqlGroupDao implements GroupDao {
             "inner join students student on groups.group_id = student.group_id\n" +
             "where student.student_id <= ?;";
     private static Logger log = LogManager.getLogger(PostgresSqlGroupDao.class);
+    private static final String DROP_GROUP_BY_ID_QUERY = "delete from groups where group_id = ?;";
 
     @Override
     public List<Group> findAllGroupByStudentId(long studentId) {
@@ -67,5 +68,21 @@ public class PostgresSqlGroupDao implements GroupDao {
         }
         log.trace("Closing connection, prepared statement, result set");
         return createdGroup;
+    }
+
+    @Override
+    public void deleteGroupById(long groupId) {
+        log.info("Deleting group by id: " + groupId);
+        try (Connection connection = connector.connectToDatabase();
+             PreparedStatement preparedStatement = connection.prepareStatement(DROP_GROUP_BY_ID_QUERY)){
+            log.trace("Opening connection, creating prepared statement");
+            preparedStatement.setInt(1, (int) groupId);
+            log.trace("Deleting group");
+            preparedStatement.execute();
+            log.info("Group with id " + groupId + " was succesfully deleted");
+        } catch (SQLException throwables) {
+            log.error("Something went wrong", throwables);
+        }
+        log.trace("Closing connection, prepared statement");
     }
 }

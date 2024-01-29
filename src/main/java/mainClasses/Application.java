@@ -18,8 +18,8 @@ public class Application {
         Connection connection = databaseConnector.connectToDatabase();
         DatabaseTableCreator tableCreator = new DatabaseTableCreator();
         DatabaseTableDeleter tableDeleter = new DatabaseTableDeleter();
-        tableDeleter.dropDatabaseTables(connection);
-        tableCreator.createDatabaseTables(connection);
+        tableDeleter.dropDatabaseTables();
+        tableCreator.createDatabaseTables();
         DataGeneratorUtil dataGenerator = new DataGeneratorUtil();
         dataGenerator.generateGroups();
         dataGenerator.generateCourses();

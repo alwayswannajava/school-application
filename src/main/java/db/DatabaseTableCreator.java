@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DatabaseTableCreator {
+    private static final DatabaseConnector connector = new DatabaseConnector();
     private static final String CREATE_GROUPS_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS groups (" +
             "group_id INT PRIMARY KEY," +
             "group_name VARCHAR ( 20 ) NOT NULL" +
@@ -29,10 +30,9 @@ public class DatabaseTableCreator {
             "CONSTRAINT student_course_pkey PRIMARY KEY (student_id, course_id));";
 
 
-    public void createDatabaseTables(Connection connection) {
-        Statement statement;
-        try {
-            statement = connection.createStatement();
+    public void createDatabaseTables() {
+        try (Connection connection = connector.connectToDatabase();
+             Statement statement = connection.createStatement()) {
             statement.executeUpdate(CREATE_GROUPS_TABLE_QUERY);
             statement.executeUpdate(CREATE_STUDENTS_TABLE_QUERY);
             statement.executeUpdate(CREATE_COURSES_TABLE_QUERY);
