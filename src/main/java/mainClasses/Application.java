@@ -4,18 +4,13 @@ import dao.GroupDao;
 import dao.StudentDao;
 import dao.postgres.PostgresSqlGroupDao;
 import dao.postgres.PostgresSqlStudentDao;
-import db.DatabaseConnector;
 import db.DatabaseTableCreator;
 import db.DatabaseTableDeleter;
 import entity.Student;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 public class Application {
     public static void main(String[] args) throws SQLException {
-        DatabaseConnector databaseConnector = new DatabaseConnector();
-        databaseConnector.readDatabaseFileProperties();
-        Connection connection = databaseConnector.connectToDatabase();
         DatabaseTableCreator tableCreator = new DatabaseTableCreator();
         DatabaseTableDeleter tableDeleter = new DatabaseTableDeleter();
         tableDeleter.dropDatabaseTables();

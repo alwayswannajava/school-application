@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
@@ -18,19 +19,20 @@ import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.*;
 class PostgresSqlGroupDaoTest {
     public static final DatabaseConnector connector = new DatabaseConnector();
+    private static final String COUNT_GROUP_QUERY = "select count(*) from groups;";
+
 
     @BeforeAll
     public static void setUp() throws SQLException {
-        connector.readDatabaseFileProperties();
         DatabaseTableDeleter tableDeleter = new DatabaseTableDeleter();
         DatabaseTableCreator tableCreator = new DatabaseTableCreator();
         tableDeleter.dropDatabaseTables();
         tableCreator.createDatabaseTables();
     }
 
-    @DisplayName("Test find all group by student id query")
+    @DisplayName("Test find all group by student id")
     @Test
-    public void testCorrectFindingStudentsByCourseName() {
+    public void testCorrectFindingGroupsByStudentId() {
         try (Connection connection = connector.connectToDatabase();
              PreparedStatement preparedStatement = connection.prepareStatement(DataGeneratorUtil.INSERT_TO_GROUP_TABLE_QUERY)) {
             preparedStatement.setInt(1, 3);
@@ -57,4 +59,41 @@ class PostgresSqlGroupDaoTest {
         actualGroupsByStudentIdList.clear();
         groupDao.deleteGroupById(3);
     }
+
+    @DisplayName("Test creating group")
+    @Test
+    public void testCorrectCreatingGroup(){
+        int countGroupAfterCreate = 0;
+        GroupDao groupDao = new PostgresSqlGroupDao();
+        groupDao.create(new Group(1, "GW-82"));
+        try(Connection connection = connector.connectToDatabase();
+        PreparedStatement preparedCountStatement = connection.prepareStatement(COUNT_GROUP_QUERY)) {
+            ResultSet resultSet = preparedCountStatement.executeQuery();
+            resultSet.next();
+            countGroupAfterCreate = resultSet.getInt(1);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        assertEquals(1, countGroupAfterCreate);
+        groupDao.deleteGroupById(1);
+    }
+
+    @DisplayName("Test deleting group by id")
+    @Test
+    public void testCorrectDeletingGroupById(){
+        int countGroupAfterDelete = 0;
+        GroupDao groupDao = new PostgresSqlGroupDao();
+        groupDao.create(new Group(1, "ER-12"));
+        try(Connection connection = connector.connectToDatabase();
+            PreparedStatement preparedCountStatement = connection.prepareStatement(COUNT_GROUP_QUERY)) {
+            groupDao.deleteGroupById(1);
+            ResultSet resultSet = preparedCountStatement.executeQuery();
+            resultSet.next();
+            countGroupAfterDelete = resultSet.getInt(1);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        assertEquals(0, countGroupAfterDelete);
+    }
+
 }

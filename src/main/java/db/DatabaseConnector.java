@@ -18,6 +18,11 @@ public class DatabaseConnector {
     private static Logger log = LogManager.getLogger(DatabaseConnector.class);
     private static final Properties properties = new Properties();
 
+    static {
+        DatabaseConnector databaseConnector = new DatabaseConnector();
+        databaseConnector.readDatabaseFileProperties();
+    }
+
     public void readDatabaseFileProperties() {
         log.trace("Creating database properties");
         try(InputStream inputStreamProperties = new FileInputStream(PROPERTIES_FILE_PATH)) {
