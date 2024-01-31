@@ -64,13 +64,8 @@ class PostgresSqlStudentDaoTest {
         int countStudentsAfterCreating = 0;
         StudentDao studentDao = new PostgresSqlStudentDao();
         try (Connection connection = connector.connectToDatabase();
-             PreparedStatement preparedCountStatement = connection.prepareStatement(COUNT_STUDENTS_QUERY);
-             PreparedStatement createStudentsStatement = connection.prepareStatement(TEST_INSERT_TO_STUDENTS_TABLE_QUERY)) {
-            createStudentsStatement.setInt(1, 1);
-            createStudentsStatement.setInt(2, 3);
-            createStudentsStatement.setString(3, "Petro");
-            createStudentsStatement.setString(4, "Petrov");
-            createStudentsStatement.execute();
+             PreparedStatement preparedCountStatement = connection.prepareStatement(COUNT_STUDENTS_QUERY)) {
+            studentDao.create(new Student(3, "Petro", "Petrov"));
             ResultSet resultSet = preparedCountStatement.executeQuery();
             resultSet.next();
             countStudentsAfterCreating = resultSet.getInt(1);
@@ -137,7 +132,7 @@ class PostgresSqlStudentDaoTest {
              PreparedStatement preparedStatement = connection.prepareStatement(COUNT_STUDENTS_COURSES_RECORDS_QUERY);
              PreparedStatement createStudentStatement = connection.prepareStatement(TEST_INSERT_TO_STUDENTS_TABLE_QUERY)) {
             createStudentStatement.setInt(1, 1);
-            createStudentStatement.setInt(1, 3);
+            createStudentStatement.setInt(2, 3);
             createStudentStatement.setString(3, "Dmytro");
             createStudentStatement.setString(4, "Mazepa");
             createStudentStatement.execute();

@@ -55,8 +55,6 @@ class PostgresSqlGroupDaoTest {
         GroupDao groupDao = new PostgresSqlGroupDao();
         List<Group> actualGroupsByStudentIdList = groupDao.findAllGroupByStudentId(1);
         assertEquals(expectedGroupsByStudentIdList, actualGroupsByStudentIdList);
-        expectedGroupsByStudentIdList.clear();
-        actualGroupsByStudentIdList.clear();
         groupDao.deleteGroupById(3);
     }
 

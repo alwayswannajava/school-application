@@ -19,11 +19,10 @@ public class DatabaseConnector {
     private static final Properties properties = new Properties();
 
     static {
-        DatabaseConnector databaseConnector = new DatabaseConnector();
-        databaseConnector.readDatabaseFileProperties();
+        readDatabaseFileProperties();
     }
 
-    public void readDatabaseFileProperties() {
+    private static final void readDatabaseFileProperties() {
         log.trace("Creating database properties");
         try(InputStream inputStreamProperties = new FileInputStream(PROPERTIES_FILE_PATH)) {
             properties.load(inputStreamProperties);
