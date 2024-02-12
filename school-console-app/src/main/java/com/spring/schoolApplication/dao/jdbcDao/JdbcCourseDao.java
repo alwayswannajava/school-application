@@ -13,7 +13,7 @@ import java.util.List;
 public class JdbcCourseDao implements CourseDao {
     private static final String CREATE_COURSE_QUERY = "insert into courses (course_id, course_name, course_description) values (?, ?, ?)";
 
-    @Autowired
+
     private JdbcTemplate jdbcTemplate;
 
     public JdbcCourseDao(JdbcTemplate jdbcTemplate) {

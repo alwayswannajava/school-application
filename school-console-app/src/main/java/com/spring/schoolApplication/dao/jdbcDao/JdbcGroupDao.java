@@ -17,7 +17,6 @@ public class JdbcGroupDao implements GroupDao {
     private static final String DROP_GROUP_BY_ID_QUERY = "delete from groups where group_id = ?;";
     private static final String CREATE_GROUP_QUERY = "insert into groups (group_id, group_name) values (?, ?);";
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     public JdbcGroupDao(JdbcTemplate jdbcTemplate) {

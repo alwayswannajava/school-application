@@ -23,7 +23,7 @@ public class JdbcStudentDao implements StudentDao {
     private static final String CREATE_STUDENT_QUERY = "insert into students (student_id, group_id, first_name, last_name) values (?, ?, ?, ?);";
     private static final String FIND_ALL_STUDENTS_QUERY = "select * from students;";
 
-    @Autowired
+
     private JdbcTemplate jdbcTemplate;
 
     public JdbcStudentDao(JdbcTemplate jdbcTemplate) {

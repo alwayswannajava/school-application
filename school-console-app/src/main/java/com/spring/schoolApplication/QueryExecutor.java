@@ -11,7 +11,6 @@ import java.util.Scanner;
 @Repository
 public class QueryExecutor {
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     public QueryExecutor(JdbcTemplate jdbcTemplate) {
