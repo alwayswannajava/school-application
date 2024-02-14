@@ -18,10 +18,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(
-        scripts = {"/sql/V1__create_test_tables.sql", "/sql/V2__insert_data_to_test_tables.sql"},
+        scripts = {"/db/migration/V1__create_tables.sql", "/db/migration/V2__insert_data.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
 class JdbcStudentDaoTest {
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private StudentDao studentDao;
@@ -34,8 +35,6 @@ class JdbcStudentDaoTest {
     @DisplayName("Test find students by course name")
     @Test
     void testCorrectFindingStudentsByCourseName() {
-        studentDao.addStudentToCourse(1, 3);
-        studentDao.addStudentToCourse(2, 3);
         List<Student> expectedFoundStudentsByCourseName = new ArrayList<>();
         expectedFoundStudentsByCourseName.add(new Student(1, 1, "Ivan", "Mazepa"));
         expectedFoundStudentsByCourseName.add(new Student(2, 2, "Ivan", "Golybev"));
@@ -46,29 +45,36 @@ class JdbcStudentDaoTest {
     @DisplayName("Test correct create student")
     @Test
     void testCorrectCreatingStudent() {
-        int expectedReturnAfterAdd = studentDao.create(new Student(7, 5, "Mykhailo", "Drapatyi"));
-        assertEquals(1, expectedReturnAfterAdd);
+        int countStudentsBeforeAdd = studentDao.findAllStudents().size();
+        studentDao.create(new Student(7, 5, "Mykhailo", "Drapatyi"));
+        int countStudentsAfterAdd = studentDao.findAllStudents().size();
+        assertEquals(countStudentsBeforeAdd + 1, countStudentsAfterAdd);
     }
 
     @DisplayName("Test correct delete student")
     @Test
     void testCorrectDeletingStudentById() {
-        int expectedReturnAfterDelete = studentDao.deleteStudentById(4);
-        assertEquals(1, expectedReturnAfterDelete);
+        int countStudentsBeforeDelete = studentDao.findAllStudents().size();
+        studentDao.deleteStudentById(5);
+        int countStudentsAfterDelete = studentDao.findAllStudents().size();
+        assertEquals(countStudentsBeforeDelete - 1, countStudentsAfterDelete);
     }
 
     @DisplayName("Test correct add student to course")
     @Test
     void testCorrectAddingStudentToCourse() {
-        int expectedReturnAfterAddStudentToCourse = studentDao.addStudentToCourse(1, 3);
-        assertEquals(1, expectedReturnAfterAddStudentToCourse);
+        int countStudentsCoursesBeforeAdd = studentDao.findAllStudentsCourses().size();
+        studentDao.addStudentToCourse(6, 3);
+        int countStudentsCoursesAfterAdd = studentDao.findAllStudentsCourses().size();
+        assertEquals(countStudentsCoursesBeforeAdd + 1, countStudentsCoursesAfterAdd);
     }
 
     @DisplayName("Test correct remove student from course")
     @Test
     void testCorrectRemovingStudentFromCourse() {
-        studentDao.addStudentToCourse(1, 3);
-        int expectedReturnAfterRemoveStudentFromCourse = studentDao.removeStudentFromCourse(1, 3);
-        assertEquals(1, expectedReturnAfterRemoveStudentFromCourse);
+        int countStudentsCoursesBeforeRemove = studentDao.findAllStudentsCourses().size();
+        studentDao.removeStudentFromCourse(1, 3);
+        int countStudentsCoursesAfterRemove = studentDao.findAllStudentsCourses().size();
+        assertEquals(countStudentsCoursesBeforeRemove - 1, countStudentsCoursesAfterRemove);
     }
 }

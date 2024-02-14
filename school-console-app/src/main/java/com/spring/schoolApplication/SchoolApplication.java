@@ -7,10 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SchoolApplication implements CommandLineRunner {
 
-	@Autowired
-	QueryExecutor queryExecutor;
-
-
 	public static void main(String[] args) {
 		SpringApplication.run(SchoolApplication.class, args);
 	}
@@ -18,6 +14,6 @@ public class SchoolApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		queryExecutor.executor();
+
 	}
 }

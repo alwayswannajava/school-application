@@ -2,7 +2,6 @@ package com.spring.schoolApplication.dao.jdbcDao;
 
 import com.spring.schoolApplication.dao.GroupDao;
 import com.spring.schoolApplication.entity.Group;
-import com.spring.schoolApplication.entity.Student;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(
-        scripts = {"/sql/V1__create_test_tables.sql", "/sql/V2__insert_data_to_test_tables.sql"},
+        scripts = {"/db/migration/V1__create_tables.sql", "/db/migration/V2__insert_data.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
 class JdbcGroupDaoTest {
@@ -47,16 +46,26 @@ class JdbcGroupDaoTest {
     @DisplayName("Test create group")
     @Test
     void testCorrectCreatingGroup(){
-        int expectedReturnAfterAdd = groupDao.create(new Group(6, "AW-81"));
-        assertEquals(1, expectedReturnAfterAdd);
+        int countGroupBeforeAdd = groupDao.findAllGroups().size();
+        groupDao.create(new Group(6, "WQ-21"));
+        int countGroupAfterAdd = groupDao.findAllGroups().size();
+        assertEquals(countGroupBeforeAdd + 1, countGroupAfterAdd);
     }
 
     @DisplayName("Test delete group")
     @Test
     void testCorrectDeletingGroupById() {
-        groupDao.create(new Group(11, "GS-18"));
-        int expectedReturnAfterDelete = groupDao.deleteGroupById(11);
-        assertEquals(1, expectedReturnAfterDelete);
+        int countGroupBeforeDelete = groupDao.findAllGroups().size();
+        groupDao.deleteGroupById(5);
+        int countGroupAfterDelete = groupDao.findAllGroups().size();
+        assertEquals(countGroupBeforeDelete - 1, countGroupAfterDelete);
     }
 
+    @DisplayName("Test find all groups")
+    @Test
+    void testCorrectFindingAllGroups(){
+        int expectedCountGroups = 5;
+        int actualCountGroups = groupDao.findAllGroups().size();
+        assertEquals(expectedCountGroups, actualCountGroups);
+    }
 }

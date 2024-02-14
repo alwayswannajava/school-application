@@ -21,3 +21,6 @@ INSERT INTO students (student_id, group_id, first_name, last_name) values (3, 3,
 INSERT INTO students (student_id, group_id, first_name, last_name) values (4, 3, 'Bogdan', 'Khmelnitskiy');
 INSERT INTO students (student_id, group_id, first_name, last_name) values (5, 4, 'Ivan', 'Sirko');
 INSERT INTO students (student_id, group_id, first_name, last_name) values (6, 5, 'Danylo', 'Galitskiy');
+
+insert into students_courses (student_id, course_id) values (1, 3);
+insert into students_courses (student_id, course_id) values (2, 3);

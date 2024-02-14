@@ -11,4 +11,6 @@ public interface GroupDao {
 
     int deleteGroupById(long groupId);
 
+    List<Group> findAllGroups();
+
 }

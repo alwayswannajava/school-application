@@ -16,8 +16,5 @@ public class TestSchoolApplication {
 		return new PostgreSQLContainer<>(DockerImageName.parse("postgres"));
 	}
 
-	public static void main(String[] args) {
-		SpringApplication.from(SchoolApplication::main).with(TestSchoolApplication.class).run(args);
-	}
 
 }

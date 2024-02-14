@@ -1,6 +1,7 @@
 package com.spring.schoolApplication.dao;
 
 import com.spring.schoolApplication.entity.Student;
+import com.spring.schoolApplication.entity.StudentCourse;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface StudentDao {
     int removeStudentFromCourse(long studentId, long courseId);
 
     List<Student> findAllStudents();
+
+    List<StudentCourse> findAllStudentsCourses();
 }

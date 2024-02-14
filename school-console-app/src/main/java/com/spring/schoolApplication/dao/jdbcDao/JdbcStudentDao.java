@@ -2,6 +2,7 @@ package com.spring.schoolApplication.dao.jdbcDao;
 
 import com.spring.schoolApplication.dao.StudentDao;
 import com.spring.schoolApplication.entity.Student;
+import com.spring.schoolApplication.entity.StudentCourse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,7 +23,7 @@ public class JdbcStudentDao implements StudentDao {
     private static final String ADD_STUDENT_TO_COURSE_QUERY = "insert into students_courses (student_id, course_id) values (?, ?);";
     private static final String CREATE_STUDENT_QUERY = "insert into students (student_id, group_id, first_name, last_name) values (?, ?, ?, ?);";
     private static final String FIND_ALL_STUDENTS_QUERY = "select * from students;";
-
+    private static final String FIND_ALL_STUDENTS_COURSES_QUERY = "select * from students_courses";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -58,6 +59,11 @@ public class JdbcStudentDao implements StudentDao {
     @Override
     public List<Student> findAllStudents() {
         return jdbcTemplate.query(FIND_ALL_STUDENTS_QUERY, BeanPropertyRowMapper.newInstance(Student.class));
+    }
+
+    @Override
+    public List<StudentCourse> findAllStudentsCourses() {
+        return jdbcTemplate.query(FIND_ALL_STUDENTS_COURSES_QUERY, BeanPropertyRowMapper.newInstance(StudentCourse.class));
     }
 
 }

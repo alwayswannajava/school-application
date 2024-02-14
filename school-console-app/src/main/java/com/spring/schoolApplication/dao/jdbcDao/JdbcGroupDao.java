@@ -16,6 +16,7 @@ public class JdbcGroupDao implements GroupDao {
             "where student.student_id <= ?;";
     private static final String DROP_GROUP_BY_ID_QUERY = "delete from groups where group_id = ?;";
     private static final String CREATE_GROUP_QUERY = "insert into groups (group_id, group_name) values (?, ?);";
+    private static final String FIND_ALL_GROUPS_QUERY = "select * from groups;";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -36,6 +37,11 @@ public class JdbcGroupDao implements GroupDao {
     @Override
     public int deleteGroupById(long groupId) {
         return jdbcTemplate.update(DROP_GROUP_BY_ID_QUERY, groupId);
+    }
+
+    @Override
+    public List<Group> findAllGroups() {
+        return jdbcTemplate.query(FIND_ALL_GROUPS_QUERY, BeanPropertyRowMapper.newInstance(Group.class));
     }
 
 }
