@@ -1,5 +1,6 @@
 package com.spring.schoolApplication.dao.jdbcDao;
 
+import com.spring.schoolApplication.DataGeneratorUtil;
 import com.spring.schoolApplication.dao.CourseDao;
 import com.spring.schoolApplication.entity.Course;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,8 +11,7 @@ import java.util.List;
 
 @Repository
 public class JdbcCourseDao implements CourseDao {
-    private static final String CREATE_COURSE_QUERY = "insert into courses (course_id, course_name, course_description) values (?, ?, ?)";
-    private static final String FIND_ALL_COURSES_QUERY = "select * from courses";
+    private static final String FIND_ALL_COURSES_QUERY = "select count(*) from courses";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -21,12 +21,12 @@ public class JdbcCourseDao implements CourseDao {
 
     @Override
     public int create(Course course) {
-        return jdbcTemplate.update(CREATE_COURSE_QUERY, course.getCourseId(), course.getCourseName(), course.getCourseDescription());
+        return jdbcTemplate.update(DataGeneratorUtil.INSERT_TO_COURSES_TABLE_QUERY, course.getCourseId(), course.getCourseName(), course.getCourseDescription());
     }
 
     @Override
-    public List<Course> findAllCourses() {
-        return jdbcTemplate.query(FIND_ALL_COURSES_QUERY, BeanPropertyRowMapper.newInstance(Course.class));
+    public int findAllCourses() {
+        return jdbcTemplate.queryForObject(FIND_ALL_COURSES_QUERY, Integer.class);
     }
 
 

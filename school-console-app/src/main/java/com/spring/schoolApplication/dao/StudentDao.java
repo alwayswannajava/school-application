@@ -16,7 +16,7 @@ public interface StudentDao {
 
     int removeStudentFromCourse(long studentId, long courseId);
 
-    List<Student> findAllStudents();
+    int findAllStudents();
 
-    List<StudentCourse> findAllStudentsCourses();
+    int findAllStudentsCourses();
 }

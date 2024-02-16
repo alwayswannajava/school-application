@@ -1,9 +1,8 @@
 package com.spring.schoolApplication.dao.jdbcDao;
 
+import com.spring.schoolApplication.DataGeneratorUtil;
 import com.spring.schoolApplication.dao.StudentDao;
 import com.spring.schoolApplication.entity.Student;
-import com.spring.schoolApplication.entity.StudentCourse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,10 +19,9 @@ public class JdbcStudentDao implements StudentDao {
     private static final String DROP_STUDENT_BY_ID_QUERY = "delete from students where student_id = ?;";
     private static final String DROP_STUDENT_BY_COURSE_QUERY = "delete from students_courses where student_id = ? and " +
             "course_id = ?;";
-    private static final String ADD_STUDENT_TO_COURSE_QUERY = "insert into students_courses (student_id, course_id) values (?, ?);";
     private static final String CREATE_STUDENT_QUERY = "insert into students (student_id, group_id, first_name, last_name) values (?, ?, ?, ?);";
-    private static final String FIND_ALL_STUDENTS_QUERY = "select * from students;";
-    private static final String FIND_ALL_STUDENTS_COURSES_QUERY = "select * from students_courses";
+    private static final String FIND_ALL_STUDENTS_QUERY = "select count(*) from students;";
+    private static final String FIND_ALL_STUDENTS_COURSES_QUERY = "select count(*) from students_courses";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -48,7 +46,7 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public int addStudentToCourse(long studentId, long courseId) {
-        return jdbcTemplate.update(ADD_STUDENT_TO_COURSE_QUERY, studentId, courseId);
+        return jdbcTemplate.update(DataGeneratorUtil.INSERT_TO_STUDENTS_COURSES_TABLE_QUERY, studentId, courseId);
     }
 
     @Override
@@ -57,13 +55,13 @@ public class JdbcStudentDao implements StudentDao {
     }
 
     @Override
-    public List<Student> findAllStudents() {
-        return jdbcTemplate.query(FIND_ALL_STUDENTS_QUERY, BeanPropertyRowMapper.newInstance(Student.class));
+    public int findAllStudents() {
+        return jdbcTemplate.queryForObject(FIND_ALL_STUDENTS_QUERY, Integer.class);
     }
 
     @Override
-    public List<StudentCourse> findAllStudentsCourses() {
-        return jdbcTemplate.query(FIND_ALL_STUDENTS_COURSES_QUERY, BeanPropertyRowMapper.newInstance(StudentCourse.class));
+    public int findAllStudentsCourses() {
+        return jdbcTemplate.queryForObject(FIND_ALL_STUDENTS_COURSES_QUERY, Integer.class);
     }
 
 }

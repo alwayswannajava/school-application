@@ -4,32 +4,32 @@ import java.util.Objects;
 
 public class StudentCourse {
 
-    private int student_id;
-    private int course_id;
+    private int studentId;
+    private int courseId;
 
     public StudentCourse() {
 
     }
 
-    public StudentCourse(int student_id, int course_id) {
-        this.student_id = student_id;
-        this.course_id = course_id;
+    public StudentCourse(int studentId, int courseId) {
+        this.studentId = studentId;
+        this.courseId = courseId;
     }
 
-    public int getStudent_id() {
-        return student_id;
+    public int getStudentId() {
+        return studentId;
     }
 
-    public void setStudent_id(int student_id) {
-        this.student_id = student_id;
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
     }
 
-    public int getCourse_id() {
-        return course_id;
+    public int getCourseId() {
+        return courseId;
     }
 
-    public void setCourse_id(int course_id) {
-        this.course_id = course_id;
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
     }
 
     @Override
@@ -37,11 +37,11 @@ public class StudentCourse {
         if (this == o) return true;
         if (!(o instanceof StudentCourse)) return false;
         StudentCourse that = (StudentCourse) o;
-        return student_id == that.student_id && course_id == that.course_id;
+        return studentId == that.studentId && courseId == that.courseId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(student_id, course_id);
+        return Objects.hash(studentId, courseId);
     }
 }

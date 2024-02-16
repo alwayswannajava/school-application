@@ -46,18 +46,18 @@ class JdbcGroupDaoTest {
     @DisplayName("Test create group")
     @Test
     void testCorrectCreatingGroup(){
-        int countGroupBeforeAdd = groupDao.findAllGroups().size();
+        int countGroupBeforeAdd = groupDao.findAllGroups();
         groupDao.create(new Group(6, "WQ-21"));
-        int countGroupAfterAdd = groupDao.findAllGroups().size();
+        int countGroupAfterAdd = groupDao.findAllGroups();
         assertEquals(countGroupBeforeAdd + 1, countGroupAfterAdd);
     }
 
     @DisplayName("Test delete group")
     @Test
     void testCorrectDeletingGroupById() {
-        int countGroupBeforeDelete = groupDao.findAllGroups().size();
+        int countGroupBeforeDelete = groupDao.findAllGroups();
         groupDao.deleteGroupById(5);
-        int countGroupAfterDelete = groupDao.findAllGroups().size();
+        int countGroupAfterDelete = groupDao.findAllGroups();
         assertEquals(countGroupBeforeDelete - 1, countGroupAfterDelete);
     }
 
@@ -65,7 +65,7 @@ class JdbcGroupDaoTest {
     @Test
     void testCorrectFindingAllGroups(){
         int expectedCountGroups = 5;
-        int actualCountGroups = groupDao.findAllGroups().size();
+        int actualCountGroups = groupDao.findAllGroups();
         assertEquals(expectedCountGroups, actualCountGroups);
     }
 }
