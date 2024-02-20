@@ -8,6 +8,6 @@ public interface CourseDao {
 
     int create(Course course);
 
-    int findAllCourses();
+    int countAllCourses();
 
 }

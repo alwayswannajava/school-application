@@ -45,7 +45,7 @@ class DataGeneratorUtilTest {
     void testCorrectAddGenerateGroupsToDatabase() {
         int expectedCountGroups = 11;
         generator.addGeneratedGroupsToDatabase();
-        int actualCountGroups = groupDao.findAllGroups();
+        int actualCountGroups = groupDao.countAllGroups();
         assertEquals(expectedCountGroups, actualCountGroups);
     }
 
@@ -54,7 +54,7 @@ class DataGeneratorUtilTest {
     public void testCorrectGeneratingCourses() {
         int expectedCountCourses = 10;
         generator.addGeneratedCoursesToDatabase();
-        int actualCountCourses = courseDao.findAllCourses();
+        int actualCountCourses = courseDao.countAllCourses();
         assertEquals(expectedCountCourses, actualCountCourses);
     }
 
@@ -64,7 +64,7 @@ class DataGeneratorUtilTest {
         int expectedCountStudents = 200;
         generator.addGeneratedGroupsToDatabase();
         generator.addGeneratedStudentsToDatabase();
-        int actualCountStudents = studentDao.findAllStudents();
+        int actualCountStudents = studentDao.countAllStudents();
         assertEquals(expectedCountStudents, actualCountStudents);
     }
 }

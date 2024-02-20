@@ -20,8 +20,8 @@ public class JdbcStudentDao implements StudentDao {
     private static final String DROP_STUDENT_BY_COURSE_QUERY = "delete from students_courses where student_id = ? and " +
             "course_id = ?;";
     private static final String CREATE_STUDENT_QUERY = "insert into students (student_id, group_id, first_name, last_name) values (?, ?, ?, ?);";
-    private static final String FIND_ALL_STUDENTS_QUERY = "select count(*) from students;";
-    private static final String FIND_ALL_STUDENTS_COURSES_QUERY = "select count(*) from students_courses";
+    private static final String COUNT_ALL_STUDENTS_QUERY = "select count(*) from students;";
+    private static final String COUNT_ALL_STUDENTS_COURSES_QUERY = "select count(*) from students_courses";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -55,13 +55,13 @@ public class JdbcStudentDao implements StudentDao {
     }
 
     @Override
-    public int findAllStudents() {
-        return jdbcTemplate.queryForObject(FIND_ALL_STUDENTS_QUERY, Integer.class);
+    public int countAllStudents() {
+        return jdbcTemplate.queryForObject(COUNT_ALL_STUDENTS_QUERY, Integer.class);
     }
 
     @Override
-    public int findAllStudentsCourses() {
-        return jdbcTemplate.queryForObject(FIND_ALL_STUDENTS_COURSES_QUERY, Integer.class);
+    public int countAllStudentsCourses() {
+        return jdbcTemplate.queryForObject(COUNT_ALL_STUDENTS_COURSES_QUERY, Integer.class);
     }
 
 }

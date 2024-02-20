@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public class JdbcCourseDao implements CourseDao {
-    private static final String FIND_ALL_COURSES_QUERY = "select count(*) from courses";
+    private static final String COUNT_ALL_COURSES_QUERY = "select count(*) from courses";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -25,8 +25,8 @@ public class JdbcCourseDao implements CourseDao {
     }
 
     @Override
-    public int findAllCourses() {
-        return jdbcTemplate.queryForObject(FIND_ALL_COURSES_QUERY, Integer.class);
+    public int countAllCourses() {
+        return jdbcTemplate.queryForObject(COUNT_ALL_COURSES_QUERY, Integer.class);
     }
 
 

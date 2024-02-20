@@ -15,7 +15,7 @@ public class JdbcGroupDao implements GroupDao {
             "inner join students student on groups.group_id = student.group_id\n" +
             "where student.student_id <= ?;";
     private static final String DROP_GROUP_BY_ID_QUERY = "delete from groups where group_id = ?;";
-    private static final String FIND_ALL_GROUPS_QUERY = "select count(*) from groups;";
+    private static final String COUNT_ALL_GROUPS_QUERY = "select count(*) from groups;";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -39,8 +39,8 @@ public class JdbcGroupDao implements GroupDao {
     }
 
     @Override
-    public int findAllGroups() {
-        return jdbcTemplate.queryForObject(FIND_ALL_GROUPS_QUERY, Integer.class);
+    public int countAllGroups() {
+        return jdbcTemplate.queryForObject(COUNT_ALL_GROUPS_QUERY, Integer.class);
     }
 
 }

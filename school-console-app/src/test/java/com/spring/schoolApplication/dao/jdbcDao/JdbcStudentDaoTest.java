@@ -45,36 +45,36 @@ class JdbcStudentDaoTest {
     @DisplayName("Test correct create student")
     @Test
     void testCorrectCreatingStudent() {
-        int countStudentsBeforeAdd = studentDao.findAllStudents();
+        int countStudentsBeforeAdd = studentDao.countAllStudents();
         studentDao.create(new Student(7, 5, "Mykhailo", "Drapatyi"));
-        int countStudentsAfterAdd = studentDao.findAllStudents();
+        int countStudentsAfterAdd = studentDao.countAllStudents();
         assertEquals(countStudentsBeforeAdd + 1, countStudentsAfterAdd);
     }
 
     @DisplayName("Test correct delete student")
     @Test
     void testCorrectDeletingStudentById() {
-        int countStudentsBeforeDelete = studentDao.findAllStudents();
+        int countStudentsBeforeDelete = studentDao.countAllStudents();
         studentDao.deleteStudentById(5);
-        int countStudentsAfterDelete = studentDao.findAllStudents();
+        int countStudentsAfterDelete = studentDao.countAllStudents();
         assertEquals(countStudentsBeforeDelete - 1, countStudentsAfterDelete);
     }
 
     @DisplayName("Test correct add student to course")
     @Test
     void testCorrectAddingStudentToCourse() {
-        int countStudentsCoursesBeforeAdd = studentDao.findAllStudentsCourses();
+        int countStudentsCoursesBeforeAdd = studentDao.countAllStudentsCourses();
         studentDao.addStudentToCourse(6, 3);
-        int countStudentsCoursesAfterAdd = studentDao.findAllStudentsCourses();
+        int countStudentsCoursesAfterAdd = studentDao.countAllStudentsCourses();
         assertEquals(countStudentsCoursesBeforeAdd + 1, countStudentsCoursesAfterAdd);
     }
 
     @DisplayName("Test correct remove student from course")
     @Test
     void testCorrectRemovingStudentFromCourse() {
-        int countStudentsCoursesBeforeRemove = studentDao.findAllStudentsCourses();
+        int countStudentsCoursesBeforeRemove = studentDao.countAllStudentsCourses();
         studentDao.removeStudentFromCourse(1, 3);
-        int countStudentsCoursesAfterRemove = studentDao.findAllStudentsCourses();
+        int countStudentsCoursesAfterRemove = studentDao.countAllStudentsCourses();
         assertEquals(countStudentsCoursesBeforeRemove - 1, countStudentsCoursesAfterRemove);
     }
 }

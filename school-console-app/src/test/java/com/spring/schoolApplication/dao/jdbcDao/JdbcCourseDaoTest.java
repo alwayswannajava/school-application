@@ -33,9 +33,9 @@ class JdbcCourseDaoTest {
     @DisplayName("Test create course")
     @Test
     void testCorrectCreatingCourse() {
-        int countCoursesBeforeAdd = courseDao.findAllCourses();
+        int countCoursesBeforeAdd = courseDao.countAllCourses();
         courseDao.create(new Course(11, "Basketball", "Basketball course"));
-        int countCoursesAfterAdd = courseDao.findAllCourses();
+        int countCoursesAfterAdd = courseDao.countAllCourses();
         assertEquals(countCoursesBeforeAdd + 1, countCoursesAfterAdd);
     }
 
@@ -43,7 +43,7 @@ class JdbcCourseDaoTest {
     @Test
     void testCorrectFindingAllCourses() {
         int expectedCountCourses = 10;
-        int actualCountCourses = courseDao.findAllCourses();
+        int actualCountCourses = courseDao.countAllCourses();
         assertEquals(expectedCountCourses, actualCountCourses);
     }
 }
