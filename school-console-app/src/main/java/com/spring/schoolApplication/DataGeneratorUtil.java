@@ -1,10 +1,6 @@
 package com.spring.schoolApplication;
-
-import com.spring.schoolApplication.entity.Course;
 import com.spring.schoolApplication.entity.Group;
-import com.spring.schoolApplication.entity.Student;
 import net.datafaker.Faker;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 

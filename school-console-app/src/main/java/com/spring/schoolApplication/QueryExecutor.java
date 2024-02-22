@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 import org.springframework.stereotype.Repository;
+
 import java.util.Scanner;
 
 @Repository
@@ -32,20 +33,18 @@ public class QueryExecutor {
                     SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql);
                     SqlRowSetMetaData metaData = sqlRowSet.getMetaData();
                     int countColumn = metaData.getColumnCount();
-                    while(sqlRowSet.next()){
+                    while (sqlRowSet.next()) {
                         System.out.println();
                         for (int column = 1; column <= countColumn; column++) {
                             System.out.print(sqlRowSet.getString(column) + "  ");
-                            if(column == countColumn){
+                            if (column == countColumn) {
                                 System.out.println();
                             }
                         }
                     }
-                }
-                else if(sql.contains("insert")){
+                } else if (sql.contains("insert")) {
                     jdbcTemplate.update(sql);
-                }
-                else if(sql.contains("drop") || sql.contains("delete")){
+                } else if (sql.contains("drop") || sql.contains("delete")) {
                     System.out.println("You don't have permission to do this");
                 }
 

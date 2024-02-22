@@ -1,11 +1,12 @@
 package com.spring.schoolApplication;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SchoolApplication implements CommandLineRunner {
+public class SchoolApplication implements ApplicationRunner {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SchoolApplication.class, args);
@@ -13,7 +14,7 @@ public class SchoolApplication implements CommandLineRunner {
 
 
 	@Override
-	public void run(String... args) throws Exception {
+	public void run(ApplicationArguments args) throws Exception {
 
 	}
 }
