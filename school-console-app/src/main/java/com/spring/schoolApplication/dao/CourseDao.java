@@ -10,4 +10,6 @@ public interface CourseDao {
 
     int countAllCourses();
 
+    boolean isCourseExist(long courseId);
+
 }

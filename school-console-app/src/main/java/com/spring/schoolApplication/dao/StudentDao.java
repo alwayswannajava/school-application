@@ -19,4 +19,8 @@ public interface StudentDao {
     int countAllStudents();
 
     int countAllStudentsCourses();
+
+    boolean isStudentExist(long studentId);
+
+    boolean isStudentAssignToCourse(long studentId, long courseId);
 }

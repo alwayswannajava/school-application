@@ -13,4 +13,7 @@ public interface GroupDao {
 
     int countAllGroups();
 
+    boolean isGroupExist(long groupId);
+
+
 }

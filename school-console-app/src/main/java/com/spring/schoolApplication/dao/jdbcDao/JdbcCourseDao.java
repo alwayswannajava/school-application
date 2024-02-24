@@ -12,6 +12,7 @@ import java.util.List;
 @Repository
 public class JdbcCourseDao implements CourseDao {
     private static final String COUNT_ALL_COURSES_QUERY = "select count(*) from courses";
+    private static final String COUNT_COURSE_EXISTS_BY_COURSE_ID_QUERY = "select count(*) from courses where course_id = ?";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -29,5 +30,10 @@ public class JdbcCourseDao implements CourseDao {
         return jdbcTemplate.queryForObject(COUNT_ALL_COURSES_QUERY, Integer.class);
     }
 
+    @Override
+    public boolean isCourseExist(long courseId) {
+        Integer countExistCourse = jdbcTemplate.queryForObject(COUNT_COURSE_EXISTS_BY_COURSE_ID_QUERY, Integer.class, courseId);
+        return countExistCourse != null && countExistCourse > 0;
+    }
 
 }

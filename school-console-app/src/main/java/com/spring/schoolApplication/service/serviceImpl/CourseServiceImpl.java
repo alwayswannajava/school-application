@@ -1,19 +1,23 @@
 package com.spring.schoolApplication.service.serviceImpl;
 import com.spring.schoolApplication.dao.jdbcDao.JdbcCourseDao;
+import com.spring.schoolApplication.exception.CourseExistsException;
 import com.spring.schoolApplication.service.CourseService;
 import com.spring.schoolApplication.entity.Course;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CourseServiceImpl implements CourseService {
+
+    @Autowired
     private JdbcCourseDao courseRepository;
 
-    public CourseServiceImpl(JdbcCourseDao courseRepository) {
-        this.courseRepository = courseRepository;
-    }
 
     @Override
-    public int create(Course course) {
+    public int create(Course course) throws CourseExistsException {
+        if(courseRepository.isCourseExist(course.getCourseId())){
+            throw new CourseExistsException("Course is already exist");
+        }
         return courseRepository.create(course);
     }
 
@@ -21,4 +25,5 @@ public class CourseServiceImpl implements CourseService {
     public int countAllCourses() {
         return courseRepository.countAllCourses();
     }
+
 }

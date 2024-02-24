@@ -16,6 +16,7 @@ public class JdbcGroupDao implements GroupDao {
             "where student.student_id <= ?;";
     private static final String DROP_GROUP_BY_ID_QUERY = "delete from groups where group_id = ?;";
     private static final String COUNT_ALL_GROUPS_QUERY = "select count(*) from groups;";
+    private static final String COUNT_GROUPS_EXISTS_BY_ID_QUERY = "select count(*) from groups where group_id = ?";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -41,6 +42,12 @@ public class JdbcGroupDao implements GroupDao {
     @Override
     public int countAllGroups() {
         return jdbcTemplate.queryForObject(COUNT_ALL_GROUPS_QUERY, Integer.class);
+    }
+
+    @Override
+    public boolean isGroupExist(long groupId) {
+        Integer countExistGroup = jdbcTemplate.queryForObject(COUNT_GROUPS_EXISTS_BY_ID_QUERY, Integer.class, groupId);
+        return countExistGroup != null && countExistGroup > 0;
     }
 
 }

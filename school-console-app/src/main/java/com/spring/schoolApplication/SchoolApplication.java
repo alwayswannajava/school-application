@@ -1,20 +1,38 @@
 package com.spring.schoolApplication;
+
+import com.spring.schoolApplication.dao.CourseDao;
+import com.spring.schoolApplication.dao.GroupDao;
+import com.spring.schoolApplication.dao.StudentDao;
+import com.spring.schoolApplication.entity.Course;
+import com.spring.schoolApplication.service.serviceImpl.GeneratorServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class SchoolApplication implements ApplicationRunner {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SchoolApplication.class, args);
-	}
+    @Autowired
+    private DatabaseChecker checker;
+
+    @Autowired
+    private GeneratorServiceImpl generatorService;
+
+    public static void main(String[] args) {
+        SpringApplication.run(SchoolApplication.class, args);
+    }
 
 
-	@Override
-	public void run(ApplicationArguments args) throws Exception {
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        if (!checker.checkDatabaseOnEmpty()) {
+            generatorService.generateGroups();
+            generatorService.generateCourses();
+            generatorService.generateStudents();
+            generatorService.setRandomCoursesForStudents();
+        }
 
-	}
+    }
 }

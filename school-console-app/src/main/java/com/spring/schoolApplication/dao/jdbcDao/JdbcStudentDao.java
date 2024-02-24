@@ -22,6 +22,10 @@ public class JdbcStudentDao implements StudentDao {
     private static final String CREATE_STUDENT_QUERY = "insert into students (student_id, group_id, first_name, last_name) values (?, ?, ?, ?);";
     private static final String COUNT_ALL_STUDENTS_QUERY = "select count(*) from students;";
     private static final String COUNT_ALL_STUDENTS_COURSES_QUERY = "select count(*) from students_courses";
+    private static final String COUNT_STUDENTS_BY_STUDENT_ID_QUERY = "select count(*) from students where student_id = ?";
+    private static final String COUNT_STUDENTS_ASSIGN_TO_COURSE_BY_STUDENT_ID_AND_COURSE_ID_QUERY = "select count(*) from students_courses where " +
+            "student_id = ? " +
+            "and course_id = ?";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -62,6 +66,19 @@ public class JdbcStudentDao implements StudentDao {
     @Override
     public int countAllStudentsCourses() {
         return jdbcTemplate.queryForObject(COUNT_ALL_STUDENTS_COURSES_QUERY, Integer.class);
+    }
+
+    @Override
+    public boolean isStudentExist(long studentId) {
+        Integer countExistStudent = jdbcTemplate.queryForObject(COUNT_STUDENTS_BY_STUDENT_ID_QUERY, Integer.class, studentId);
+        return countExistStudent != null && countExistStudent > 0;
+    }
+
+    @Override
+    public boolean isStudentAssignToCourse(long studentId, long courseId) {
+        Integer countExistStudentAssignToCourse = jdbcTemplate.queryForObject(COUNT_STUDENTS_ASSIGN_TO_COURSE_BY_STUDENT_ID_AND_COURSE_ID_QUERY,
+                Integer.class, studentId, courseId);
+        return countExistStudentAssignToCourse != null && countExistStudentAssignToCourse > 0;
     }
 
 }

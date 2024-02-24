@@ -1,11 +1,11 @@
 package com.spring.schoolApplication.service;
 
 public interface GeneratorService {
-    void addGeneratedGroupsToDatabase();
+    void generateGroups();
 
-    void addGeneratedCoursesToDatabase();
+    void generateCourses();
 
-    void addGeneratedStudentsToDatabase();
+    void generateStudents();
 
     void setRandomCoursesForStudents();
 
