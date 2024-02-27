@@ -1,8 +1,8 @@
 package com.spring.schoolApplication.dao.jdbcDao;
 
-import com.spring.schoolApplication.DataGeneratorUtil;
 import com.spring.schoolApplication.dao.StudentDao;
 import com.spring.schoolApplication.entity.Student;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -19,13 +19,13 @@ public class JdbcStudentDao implements StudentDao {
     private static final String DROP_STUDENT_BY_ID_QUERY = "delete from students where student_id = ?;";
     private static final String DROP_STUDENT_BY_COURSE_QUERY = "delete from students_courses where student_id = ? and " +
             "course_id = ?;";
-    private static final String CREATE_STUDENT_QUERY = "insert into students (student_id, group_id, first_name, last_name) values (?, ?, ?, ?);";
-    private static final String COUNT_ALL_STUDENTS_QUERY = "select count(*) from students;";
-    private static final String COUNT_ALL_STUDENTS_COURSES_QUERY = "select count(*) from students_courses";
+    private static final String CREATE_STUDENT_QUERY = "insert into students (group_id, first_name, last_name) values (?, ?, ?);";
     private static final String COUNT_STUDENTS_BY_STUDENT_ID_QUERY = "select count(*) from students where student_id = ?";
     private static final String COUNT_STUDENTS_ASSIGN_TO_COURSE_BY_STUDENT_ID_AND_COURSE_ID_QUERY = "select count(*) from students_courses where " +
             "student_id = ? " +
             "and course_id = ?";
+    private static final String CREATE_STUDENT_WITHOUT_GROUP_QUERY = "insert into students (first_name, last_name) values (?, ?)";
+    private static final String INSERT_TO_STUDENTS_COURSES_TABLE_QUERY = "INSERT INTO students_courses (student_id, course_id) values (?, ?)";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -40,7 +40,12 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public int create(Student student) {
-        return jdbcTemplate.update(CREATE_STUDENT_QUERY, student.getStudentId(), student.getGroupId(), student.getFirstName(), student.getLastName());
+        return jdbcTemplate.update(CREATE_STUDENT_QUERY, student.getGroupId(), student.getFirstName(), student.getLastName());
+    }
+
+    @Override
+    public int createWithoutGroup(Student student) {
+        return jdbcTemplate.update(CREATE_STUDENT_WITHOUT_GROUP_QUERY, student.getFirstName(), student.getLastName());
     }
 
     @Override
@@ -50,22 +55,12 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public int addStudentToCourse(long studentId, long courseId) {
-        return jdbcTemplate.update(DataGeneratorUtil.INSERT_TO_STUDENTS_COURSES_TABLE_QUERY, studentId, courseId);
+        return jdbcTemplate.update(INSERT_TO_STUDENTS_COURSES_TABLE_QUERY, studentId, courseId);
     }
 
     @Override
     public int removeStudentFromCourse(long studentId, long courseId) {
         return jdbcTemplate.update(DROP_STUDENT_BY_COURSE_QUERY, studentId, courseId);
-    }
-
-    @Override
-    public int countAllStudents() {
-        return jdbcTemplate.queryForObject(COUNT_ALL_STUDENTS_QUERY, Integer.class);
-    }
-
-    @Override
-    public int countAllStudentsCourses() {
-        return jdbcTemplate.queryForObject(COUNT_ALL_STUDENTS_COURSES_QUERY, Integer.class);
     }
 
     @Override

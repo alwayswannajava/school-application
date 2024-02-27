@@ -18,10 +18,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(
-        scripts = {"/db/migration/V1__create_tables.sql", "/db/migration/V2__insert_data.sql"},
+        scripts = {"/db/migration/V1__create_tables.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
 class JdbcStudentDaoTest {
+    private static final String COUNT_ALL_STUDENTS_QUERY = "select count(*) from students;";
+    private static final String COUNT_ALL_STUDENTS_COURSES_QUERY = "select count(*) from students_courses";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -31,6 +33,7 @@ class JdbcStudentDaoTest {
     void setUp() {
         studentDao = new JdbcStudentDao(jdbcTemplate);
     }
+
 
     @DisplayName("Test find students by course name")
     @Test
@@ -45,36 +48,44 @@ class JdbcStudentDaoTest {
     @DisplayName("Test correct create student")
     @Test
     void testCorrectCreatingStudent() {
-        int countStudentsBeforeAdd = studentDao.countAllStudents();
+        int countStudentsBeforeAdd = countAllStudents();
         studentDao.create(new Student(7, 5, "Mykhailo", "Drapatyi"));
-        int countStudentsAfterAdd = studentDao.countAllStudents();
+        int countStudentsAfterAdd = countAllStudents();
         assertEquals(countStudentsBeforeAdd + 1, countStudentsAfterAdd);
     }
 
     @DisplayName("Test correct delete student")
     @Test
     void testCorrectDeletingStudentById() {
-        int countStudentsBeforeDelete = studentDao.countAllStudents();
+        int countStudentsBeforeDelete = countAllStudents();
         studentDao.deleteStudentById(5);
-        int countStudentsAfterDelete = studentDao.countAllStudents();
+        int countStudentsAfterDelete = countAllStudents();
         assertEquals(countStudentsBeforeDelete - 1, countStudentsAfterDelete);
     }
 
     @DisplayName("Test correct add student to course")
     @Test
     void testCorrectAddingStudentToCourse() {
-        int countStudentsCoursesBeforeAdd = studentDao.countAllStudentsCourses();
+        int countStudentsCoursesBeforeAdd = countAllStudentsCourses();
         studentDao.addStudentToCourse(6, 3);
-        int countStudentsCoursesAfterAdd = studentDao.countAllStudentsCourses();
+        int countStudentsCoursesAfterAdd = countAllStudentsCourses();
         assertEquals(countStudentsCoursesBeforeAdd + 1, countStudentsCoursesAfterAdd);
     }
 
     @DisplayName("Test correct remove student from course")
     @Test
     void testCorrectRemovingStudentFromCourse() {
-        int countStudentsCoursesBeforeRemove = studentDao.countAllStudentsCourses();
+        int countStudentsCoursesBeforeRemove = countAllStudentsCourses();
         studentDao.removeStudentFromCourse(1, 3);
-        int countStudentsCoursesAfterRemove = studentDao.countAllStudentsCourses();
+        int countStudentsCoursesAfterRemove = countAllStudentsCourses();
         assertEquals(countStudentsCoursesBeforeRemove - 1, countStudentsCoursesAfterRemove);
+    }
+
+    public int countAllStudents() {
+        return jdbcTemplate.queryForObject(COUNT_ALL_STUDENTS_QUERY, Integer.class);
+    }
+
+    public int countAllStudentsCourses() {
+        return jdbcTemplate.queryForObject(COUNT_ALL_STUDENTS_COURSES_QUERY, Integer.class);
     }
 }

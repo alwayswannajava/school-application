@@ -16,10 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(
-        scripts = {"/db/migration/V1__create_tables.sql", "/db/migration/V2__insert_data.sql"},
+        scripts = {"/db/migration/V1__create_tables.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
 class JdbcCourseDaoTest {
+    private static final String COUNT_ALL_COURSES_QUERY = "select count(*) from courses";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -30,12 +31,13 @@ class JdbcCourseDaoTest {
         courseDao = new JdbcCourseDao(jdbcTemplate);
     }
 
+
     @DisplayName("Test create course")
     @Test
     void testCorrectCreatingCourse() {
-        int countCoursesBeforeAdd = courseDao.countAllCourses();
+        int countCoursesBeforeAdd = countAllCourses();
         courseDao.create(new Course(11, "Basketball", "Basketball course"));
-        int countCoursesAfterAdd = courseDao.countAllCourses();
+        int countCoursesAfterAdd = countAllCourses();
         assertEquals(countCoursesBeforeAdd + 1, countCoursesAfterAdd);
     }
 
@@ -43,7 +45,11 @@ class JdbcCourseDaoTest {
     @Test
     void testCorrectFindingAllCourses() {
         int expectedCountCourses = 10;
-        int actualCountCourses = courseDao.countAllCourses();
+        int actualCountCourses = countAllCourses();
         assertEquals(expectedCountCourses, actualCountCourses);
+    }
+
+    private int countAllCourses() {
+        return jdbcTemplate.queryForObject(COUNT_ALL_COURSES_QUERY, Integer.class);
     }
 }

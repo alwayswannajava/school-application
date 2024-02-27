@@ -1,6 +1,5 @@
 package com.spring.schoolApplication.service.serviceImpl;
 
-import com.spring.schoolApplication.DataGeneratorUtil;
 import com.spring.schoolApplication.dao.jdbcDao.JdbcGroupDao;
 import com.spring.schoolApplication.exception.*;
 import com.spring.schoolApplication.service.GroupService;
@@ -17,7 +16,7 @@ public class GroupServiceImpl implements GroupService {
     private JdbcGroupDao groupRepository;
 
     @Override
-    public List<Group> findAllGroupByStudentId(long studentId) throws StudentIdIsLessThanZeroException {
+    public List<Group> findAllGroupByStudentId(long studentId) {
         if (studentId < 0) {
             throw new StudentIdIsLessThanZeroException("Student id cannot be less than zero");
         }
@@ -25,7 +24,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public int create(Group group) throws GroupExistsException {
+    public int create(Group group) {
         if (groupRepository.isGroupExist(group.getGroupId())) {
             throw new GroupExistsException("Group is already exist");
         }
@@ -33,7 +32,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public int deleteGroupById(long groupId) throws GroupDoesntExistException, GroupIdIsLessThanZeroException {
+    public int deleteGroupById(long groupId) {
         if (groupId < 0) {
             throw new GroupIdIsLessThanZeroException("Group id cannot be less than zero");
         } else if (!groupRepository.isGroupExist(groupId)) {
@@ -42,8 +41,4 @@ public class GroupServiceImpl implements GroupService {
         return groupRepository.deleteGroupById(groupId);
     }
 
-    @Override
-    public int countAllGroups() {
-        return groupRepository.countAllGroups();
-    }
 }

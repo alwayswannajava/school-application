@@ -21,7 +21,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public int create(Student student) throws StudentIdIsLessThanZeroException, StudentExistsException {
+    public int create(Student student){
         if (student.getStudentId() < 0) {
             throw new StudentIdIsLessThanZeroException("Cannot create student with id " + student.getStudentId());
         } else if (studentRepository.isStudentExist(student.getStudentId())) {
@@ -31,17 +31,17 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public int deleteStudentById(long studentId) throws StudentDoesntExistException, StudentIdIsLessThanZeroException {
+    public int deleteStudentById(long studentId) {
         if (studentId < 0) {
-            throw new StudentIdIsLessThanZeroException("Cannot create student with id " + studentId);
+            throw new StudentIdIsLessThanZeroException("Cannot delete student with id " + studentId);
         } else if (!studentRepository.isStudentExist(studentId)) {
-            throw new StudentDoesntExistException("Cannot delete student by id " + studentId + ". Maybe it has deleted before");
+            throw new StudentDoesntExistException("There is no student with id " + studentId);
         }
         return studentRepository.deleteStudentById(studentId);
     }
 
     @Override
-    public int addStudentToCourse(long studentId, long courseId) throws StudentIdIsLessThanZeroException, CourseIdLessThanZeroException, StudentAlreadyAssignToCourseException {
+    public int addStudentToCourse(long studentId, long courseId) {
         if (studentId < 0) {
             throw new StudentIdIsLessThanZeroException("Cannot assign student with id " + studentId);
         } else if (courseId < 0) {
@@ -53,7 +53,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public int removeStudentFromCourse(long studentId, long courseId) throws StudentIdIsLessThanZeroException, CourseIdLessThanZeroException, StudentCourseDoesntExistException {
+    public int removeStudentFromCourse(long studentId, long courseId) {
         if (studentId < 0) {
             throw new StudentIdIsLessThanZeroException("Cannot remove student with id " + studentId);
         } else if (courseId < 0) {
@@ -62,14 +62,5 @@ public class StudentServiceImpl implements StudentService {
             throw new StudentCourseDoesntExistException("There are none student with id " + studentId + " and course with id " + courseId);
         }
         return studentRepository.removeStudentFromCourse(studentId, courseId);
-    }
-    @Override
-    public int countAllStudents() {
-        return studentRepository.countAllStudents();
-    }
-
-    @Override
-    public int countAllStudentsCourses() {
-        return studentRepository.countAllStudentsCourses();
     }
 }

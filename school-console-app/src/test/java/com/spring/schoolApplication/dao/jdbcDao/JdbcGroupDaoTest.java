@@ -18,10 +18,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(
-        scripts = {"/db/migration/V1__create_tables.sql", "/db/migration/V2__insert_data.sql"},
+        scripts = {"/db/migration/V1__create_tables.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
 class JdbcGroupDaoTest {
+    private static final String COUNT_ALL_GROUPS_QUERY = "select count(*) from groups;";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -45,19 +46,19 @@ class JdbcGroupDaoTest {
 
     @DisplayName("Test create group")
     @Test
-    void testCorrectCreatingGroup(){
-        int countGroupBeforeAdd = groupDao.countAllGroups();
+    void testCorrectCreatingGroup() {
+        int countGroupBeforeAdd = countAllGroups();
         groupDao.create(new Group(6, "WQ-21"));
-        int countGroupAfterAdd = groupDao.countAllGroups();
+        int countGroupAfterAdd = countAllGroups();
         assertEquals(countGroupBeforeAdd + 1, countGroupAfterAdd);
     }
 
     @DisplayName("Test delete group")
     @Test
     void testCorrectDeletingGroupById() {
-        int countGroupBeforeDelete = groupDao.countAllGroups();
+        int countGroupBeforeDelete = countAllGroups();
         groupDao.deleteGroupById(5);
-        int countGroupAfterDelete = groupDao.countAllGroups();
+        int countGroupAfterDelete = countAllGroups();
         assertEquals(countGroupBeforeDelete - 1, countGroupAfterDelete);
     }
 
@@ -65,7 +66,11 @@ class JdbcGroupDaoTest {
     @Test
     void testCorrectFindingAllGroups(){
         int expectedCountGroups = 5;
-        int actualCountGroups = groupDao.countAllGroups();
+        int actualCountGroups = countAllGroups();
         assertEquals(expectedCountGroups, actualCountGroups);
+    }
+
+    public int countAllGroups() {
+        return jdbcTemplate.queryForObject(COUNT_ALL_GROUPS_QUERY, Integer.class);
     }
 }

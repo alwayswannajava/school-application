@@ -9,4 +9,6 @@ public interface GeneratorService {
 
     void setRandomCoursesForStudents();
 
+    void generateDbEntities();
+
 }

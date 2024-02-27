@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS groups
 CREATE TABLE IF NOT EXISTS students
 (
     student_id SERIAL PRIMARY KEY,
-    group_id   INT         NOT NULL DEFAULT 0 REFERENCES groups ON UPDATE CASCADE ON DELETE CASCADE,
+    group_id   INT         DEFAULT NULL REFERENCES groups ON UPDATE CASCADE ON DELETE CASCADE,
     first_name VARCHAR(30) NOT NULL,
     last_name  VARCHAR(30) NOT NULL,
     FOREIGN KEY (group_id) REFERENCES groups (group_id)

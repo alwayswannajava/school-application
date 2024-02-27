@@ -5,8 +5,7 @@ import com.spring.schoolApplication.exception.CourseExistsException;
 
 public interface CourseService {
 
-    int create(Course course) throws CourseExistsException;
+    int create(Course course);
 
-    int countAllCourses();
 
 }

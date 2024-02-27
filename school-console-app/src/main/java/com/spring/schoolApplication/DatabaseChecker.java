@@ -19,5 +19,4 @@ public class DatabaseChecker {
         return countTables != null && countTables > 0;
     }
 
-
 }

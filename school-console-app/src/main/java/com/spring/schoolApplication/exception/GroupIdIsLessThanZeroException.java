@@ -1,6 +1,6 @@
 package com.spring.schoolApplication.exception;
 
-public class GroupIdIsLessThanZeroException extends Exception{
+public class GroupIdIsLessThanZeroException extends RuntimeException{
     public GroupIdIsLessThanZeroException() {
     }
 

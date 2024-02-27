@@ -37,9 +37,4 @@ class GroupServiceImplTest {
 
     }
 
-    @DisplayName("Test find all groups")
-    @Test
-    void testCorrectFindingAllGroups(){
-
-    }
 }

@@ -11,7 +11,6 @@ public interface GroupDao {
 
     int deleteGroupById(long groupId);
 
-    int countAllGroups();
 
     boolean isGroupExist(long groupId);
 

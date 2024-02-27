@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Student {
     private int studentId;
-    private int groupId;
+    private Integer groupId;
     private String firstName;
     private String lastName;
 
@@ -12,13 +12,18 @@ public class Student {
 
     }
 
-    public Student(int groupId, String firstName, String lastName) {
+    public Student(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public Student(Integer groupId, String firstName, String lastName) {
         this.groupId = groupId;
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    public Student(int studentId, int groupId, String firstName, String lastName) {
+    public Student(int studentId, Integer groupId, String firstName, String lastName) {
         this.studentId = studentId;
         this.groupId = groupId;
         this.firstName = firstName;

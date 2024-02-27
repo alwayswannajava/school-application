@@ -8,8 +8,6 @@ public interface CourseDao {
 
     int create(Course course);
 
-    int countAllCourses();
-
     boolean isCourseExist(long courseId);
 
 }

@@ -8,15 +8,12 @@ import java.util.List;
 public interface StudentService {
     List<Student> findStudentsByCourseName(String courseName);
 
-    int create(Student student) throws StudentExistsException, StudentIdIsLessThanZeroException;
+    int create(Student student);
 
-    int deleteStudentById(long studentId) throws StudentDoesntExistException, StudentIdIsLessThanZeroException;
+    int deleteStudentById(long studentId);
 
-    int addStudentToCourse(long studentId, long courseId) throws StudentAlreadyAssignToCourseException, StudentIdIsLessThanZeroException, CourseIdLessThanZeroException;
+    int addStudentToCourse(long studentId, long courseId);
 
-    int removeStudentFromCourse(long studentId, long courseId) throws StudentIdIsLessThanZeroException, CourseIdLessThanZeroException, StudentCourseDoesntExistException;
+    int removeStudentFromCourse(long studentId, long courseId);
 
-    int countAllStudents();
-
-    int countAllStudentsCourses();
 }

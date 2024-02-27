@@ -1,9 +1,11 @@
 package com.spring.schoolApplication.service.serviceImpl;
 
-import com.spring.schoolApplication.DataGeneratorUtil;
+import com.spring.schoolApplication.dao.jdbcDao.JdbcCourseDao;
+import com.spring.schoolApplication.dao.jdbcDao.JdbcGroupDao;
+import com.spring.schoolApplication.dao.jdbcDao.JdbcStudentDao;
+import com.spring.schoolApplication.entity.Course;
 import com.spring.schoolApplication.entity.Group;
 import com.spring.schoolApplication.entity.Student;
-import com.spring.schoolApplication.entity.StudentCourse;
 import com.spring.schoolApplication.service.GeneratorService;
 import net.datafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,21 +26,35 @@ public class GeneratorServiceImpl implements GeneratorService {
     private static final int MAX_COUNT_STUDENTS = 200;
 
     @Autowired
-    private DataGeneratorUtil generatorRepository;
+    private JdbcCourseDao courseRepository;
 
+    @Autowired
+    private JdbcGroupDao groupRepository;
+
+    @Autowired
+    private JdbcStudentDao studentRepository;
 
     @Override
     public void generateGroups() {
         Faker faker = new Faker();
         for (int groupId = 1; groupId < MAX_COUNT_GROUPS; groupId++) {
             Group currentRandomGroup = new Group(groupId, faker.regexify(GENERATE_GROUP_NAME_REGEX_PATTERN));
-            generatorRepository.addGeneratedGroupToDatabase(currentRandomGroup);
+            groupRepository.create(currentRandomGroup);
         }
     }
 
     @Override
     public void generateCourses() {
-        generatorRepository.addGeneratedCoursesToDatabase();
+        courseRepository.create(new Course(1, "Math", "Math course"));
+        courseRepository.create(new Course( 2, "Physical Education", "Physical education course"));
+        courseRepository.create(new Course( 3, "Physics", "Physics course"));
+        courseRepository.create(new Course( 4, "English", "English course"));
+        courseRepository.create(new Course( 5, "History", "History course"));
+        courseRepository.create(new Course( 6, "Information technology", "Information technology course"));
+        courseRepository.create(new Course( 7, "Art", "Art course"));
+        courseRepository.create(new Course( 8, "Geography", "Geography course"));
+        courseRepository.create(new Course( 9, "Chemistry", "Chemistry course"));
+        courseRepository.create(new Course( 10, "Literature", "Literature course"));
     }
 
     @Override
@@ -58,8 +74,15 @@ public class GeneratorServiceImpl implements GeneratorService {
             for (int i = 0; i < countStudents; i++) {
                 String firstName = faker.name().firstName();
                 String lastName = faker.name().lastName();
-                Student currentStudent = new Student(idRandomGroup, firstName, lastName);
-                generatorRepository.addGeneratedStudentToDatabase(currentStudent);
+                Student currentStudent;
+                if(idRandomGroup == 0) {
+                    currentStudent = new Student(firstName, lastName);
+                    studentRepository.createWithoutGroup(currentStudent);
+                }
+                else {
+                    currentStudent = new Student(idRandomGroup, firstName, lastName);
+                    studentRepository.create(currentStudent);
+                }
                 index++;
             }
         }
@@ -78,10 +101,19 @@ public class GeneratorServiceImpl implements GeneratorService {
                 while (lastIdRandomCourseSet.contains(idRandomCourse)) {
                     idRandomCourse = random.nextInt(ID_RANDOM_COURSE_RANGE) + 1;
                 }
-                StudentCourse studentCourse = new StudentCourse(currentStudentId + 1, idRandomCourse);
-                generatorRepository.setRandomCoursesForStudents(studentCourse);
+                studentRepository.addStudentToCourse(currentStudentId + 1, idRandomCourse);
                 lastIdRandomCourseSet.add(idRandomCourse);
             }
         }
     }
+
+    @Override
+    public void generateDbEntities() {
+        generateGroups();
+        generateCourses();
+        generateStudents();
+        setRandomCoursesForStudents();
+    }
+
+
 }

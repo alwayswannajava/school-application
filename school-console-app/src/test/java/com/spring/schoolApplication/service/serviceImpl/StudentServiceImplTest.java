@@ -17,8 +17,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class StudentServiceImplTest {
 
-
-
     @DisplayName("Test find students by course name")
     @Test
     void testCorrectFindingStudentsByCourseName() {
@@ -48,4 +46,5 @@ class StudentServiceImplTest {
     void testCorrectRemovingStudentFromCourse() {
 
     }
+
 }

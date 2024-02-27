@@ -6,12 +6,11 @@ import com.spring.schoolApplication.exception.*;
 import java.util.List;
 
 public interface GroupService {
-    List<Group> findAllGroupByStudentId(long studentId) throws StudentIdIsLessThanZeroException;
+    List<Group> findAllGroupByStudentId(long studentId);
 
-    int create(Group group) throws GroupExistsException;
+    int create(Group group);
 
-    int deleteGroupById(long groupId) throws GroupDoesntExistException, GroupIdIsLessThanZeroException;
+    int deleteGroupById(long groupId);
 
-    int countAllGroups();
 
 }

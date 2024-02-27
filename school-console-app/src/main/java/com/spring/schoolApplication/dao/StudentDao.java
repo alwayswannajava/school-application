@@ -10,15 +10,13 @@ public interface StudentDao {
 
     int create(Student student);
 
+    int createWithoutGroup(Student student);
+
     int deleteStudentById(long studentId);
 
     int addStudentToCourse(long studentId, long courseId);
 
     int removeStudentFromCourse(long studentId, long courseId);
-
-    int countAllStudents();
-
-    int countAllStudentsCourses();
 
     boolean isStudentExist(long studentId);
 
