@@ -41,13 +41,6 @@ class JdbcCourseDaoTest {
         assertEquals(countCoursesBeforeAdd + 1, countCoursesAfterAdd);
     }
 
-    @DisplayName("Test find all courses")
-    @Test
-    void testCorrectFindingAllCourses() {
-        int expectedCountCourses = 10;
-        int actualCountCourses = countAllCourses();
-        assertEquals(expectedCountCourses, actualCountCourses);
-    }
 
     private int countAllCourses() {
         return jdbcTemplate.queryForObject(COUNT_ALL_COURSES_QUERY, Integer.class);

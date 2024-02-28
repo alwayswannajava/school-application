@@ -1,5 +1,6 @@
 package com.spring.schoolApplication.service.serviceImpl;
 
+import com.spring.schoolApplication.dao.GroupDao;
 import com.spring.schoolApplication.dao.jdbcDao.JdbcGroupDao;
 import com.spring.schoolApplication.exception.*;
 import com.spring.schoolApplication.service.GroupService;
@@ -13,7 +14,7 @@ import java.util.List;
 public class GroupServiceImpl implements GroupService {
 
     @Autowired
-    private JdbcGroupDao groupRepository;
+    private GroupDao groupRepository;
 
     @Override
     public List<Group> findAllGroupByStudentId(long studentId) {

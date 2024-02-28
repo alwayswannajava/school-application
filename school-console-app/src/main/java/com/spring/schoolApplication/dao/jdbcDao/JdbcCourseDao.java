@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 public class JdbcCourseDao implements CourseDao {
     private static final String COUNT_COURSE_EXISTS_BY_COURSE_ID_QUERY = "select count(*) from courses where course_id = ?";
     private static final String INSERT_TO_COURSES_TABLE_QUERY = "INSERT INTO courses (course_id, course_name, course_description) values (?, ?, ?);";
-
     private JdbcTemplate jdbcTemplate;
 
     public JdbcCourseDao(JdbcTemplate jdbcTemplate) {

@@ -1,5 +1,8 @@
 package com.spring.schoolApplication.service.serviceImpl;
 
+import com.spring.schoolApplication.dao.CourseDao;
+import com.spring.schoolApplication.dao.GroupDao;
+import com.spring.schoolApplication.dao.StudentDao;
 import com.spring.schoolApplication.dao.jdbcDao.JdbcCourseDao;
 import com.spring.schoolApplication.dao.jdbcDao.JdbcGroupDao;
 import com.spring.schoolApplication.dao.jdbcDao.JdbcStudentDao;
@@ -26,13 +29,13 @@ public class GeneratorServiceImpl implements GeneratorService {
     private static final int MAX_COUNT_STUDENTS = 200;
 
     @Autowired
-    private JdbcCourseDao courseRepository;
+    private CourseDao courseRepository;
 
     @Autowired
-    private JdbcGroupDao groupRepository;
+    private GroupDao groupRepository;
 
     @Autowired
-    private JdbcStudentDao studentRepository;
+    private StudentDao studentRepository;
 
     @Override
     public void generateGroups() {

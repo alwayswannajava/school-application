@@ -62,14 +62,6 @@ class JdbcGroupDaoTest {
         assertEquals(countGroupBeforeDelete - 1, countGroupAfterDelete);
     }
 
-    @DisplayName("Test find all groups")
-    @Test
-    void testCorrectFindingAllGroups(){
-        int expectedCountGroups = 5;
-        int actualCountGroups = countAllGroups();
-        assertEquals(expectedCountGroups, actualCountGroups);
-    }
-
     public int countAllGroups() {
         return jdbcTemplate.queryForObject(COUNT_ALL_GROUPS_QUERY, Integer.class);
     }

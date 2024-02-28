@@ -1,6 +1,6 @@
 package com.spring.schoolApplication.service.serviceImpl;
 
-import com.spring.schoolApplication.dao.jdbcDao.JdbcStudentDao;
+import com.spring.schoolApplication.dao.StudentDao;
 import com.spring.schoolApplication.exception.*;
 import com.spring.schoolApplication.service.StudentService;
 import com.spring.schoolApplication.entity.Student;
@@ -13,7 +13,7 @@ import java.util.List;
 public class StudentServiceImpl implements StudentService {
 
     @Autowired
-    private JdbcStudentDao studentRepository;
+    private StudentDao studentRepository;
 
     @Override
     public List<Student> findStudentsByCourseName(String courseName) {
