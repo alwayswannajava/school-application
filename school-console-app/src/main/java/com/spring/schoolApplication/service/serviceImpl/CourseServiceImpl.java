@@ -17,11 +17,11 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public int create(Course course) {
-        if (courseRepository.isCourseExist(course.getCourseId())) {
-            throw new CourseExistsException("Course is already exist");
-        }
         if (course.getCourseId() < 0) {
             throw new CourseIdLessThanZeroException("Cannot create course with id less than 0");
+        }
+        if (courseRepository.isCourseExist(course.getCourseId())) {
+            throw new CourseExistsException("Course is already exist");
         }
         return courseRepository.create(course);
     }
