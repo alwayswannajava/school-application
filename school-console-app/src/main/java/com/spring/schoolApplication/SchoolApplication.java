@@ -1,5 +1,8 @@
 package com.spring.schoolApplication;
 
+import com.spring.schoolApplication.dao.CourseDao;
+import com.spring.schoolApplication.entity.Course;
+import com.spring.schoolApplication.service.serviceImpl.CourseServiceImpl;
 import com.spring.schoolApplication.service.serviceImpl.GeneratorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;

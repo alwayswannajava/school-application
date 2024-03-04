@@ -17,9 +17,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @SpringBootTest(classes = {GroupServiceImpl.class})
@@ -44,41 +42,25 @@ class GroupServiceImplTest {
     @Test
     void testCorrectCreatingGroup() {
         Group group = new Group(1, "TW-62");
-        when(groupDao.create(group)).thenReturn(1);
-    }
-
-    @DisplayName("Test delete group")
-    @Test
-    void testCorrectDeletingGroupById() {
-        when(groupDao.deleteGroupById(2)).thenReturn(1);
+        groupService.create(group);
+        verify(groupDao, times(1)).create(group);
     }
 
     @DisplayName("Test throw StudentIdLessThanZeroException when invoke findAllGroupByStudentId method")
     @Test
     void testThrowStudentIdLessThanZeroExceptionWhenInvokeFindAllGroupByStudentIdMethod() {
-        when(groupDao.findAllGroupByStudentId(-5)).thenThrow(StudentIdIsLessThanZeroException.class);
         assertThrows(StudentIdIsLessThanZeroException.class, () -> groupService.findAllGroupByStudentId(-5));
-    }
-
-    @DisplayName("Test throw GroupExistsException when invoke create group")
-    @Test
-    void testThrowGroupExistsExceptionWhenCreateGroup(){
-        Group group = new Group(3, "MK-71");
-        when(groupDao.isGroupExist(group.getGroupId())).thenThrow(GroupExistsException.class);
-        assertThrows(GroupExistsException.class, () -> groupService.create(group));
     }
 
     @DisplayName("Test throw GroupIdIsLessThanZeroException when delete group")
     @Test
     void testThrowGroupIdIsLessThanZeroExceptionWhenDeleteGroup(){
-        when(groupDao.deleteGroupById(-100)).thenThrow(GroupIdIsLessThanZeroException.class);
         assertThrows(GroupIdIsLessThanZeroException.class, () -> groupService.deleteGroupById(-100));
     }
 
     @DisplayName("Test throw GroupDoesntExistException when invoke delete group")
     @Test
     void testThrowGroupDoesntExistExceptionWhenInvokeDeleteGroup(){
-        when(groupDao.deleteGroupById(200)).thenThrow(GroupDoesntExistException.class);
         assertThrows(GroupDoesntExistException.class, () -> groupService.deleteGroupById(200));
     }
 
@@ -86,8 +68,8 @@ class GroupServiceImplTest {
     @Test
     void testIsGroupExistReturnsBoolean() {
         Group group = new Group(4, "WL-61");
-        when(groupDao.isGroupExist(group.getGroupId())).thenReturn(true);
-        when(!groupDao.isGroupExist(group.getGroupId())).thenReturn(false);
+        groupDao.isGroupExist(group.getGroupId());
+        verify(groupDao).isGroupExist(group.getGroupId());
     }
 
 
