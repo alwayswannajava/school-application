@@ -46,9 +46,9 @@ class GroupServiceImplTest {
         verify(groupDao, times(1)).create(group);
     }
 
-    @DisplayName("Test throw")
+    @DisplayName("Test groupIsExist return false")
     @Test
-    void testAAA(){
+    void testGroupIsExistReturnFalse(){
         Group group = new Group(2, "KW-28");
         when(groupDao.isGroupExist(group.getGroupId())).thenReturn(false);
         assertEquals(false, groupDao.isGroupExist(group.getGroupId()));
