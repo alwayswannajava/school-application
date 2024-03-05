@@ -46,6 +46,15 @@ class GroupServiceImplTest {
         verify(groupDao, times(1)).create(group);
     }
 
+    @DisplayName("Test throw")
+    @Test
+    void testAAA(){
+        Group group = new Group(2, "KW-28");
+        when(groupDao.isGroupExist(group.getGroupId())).thenReturn(false);
+        assertEquals(false, groupDao.isGroupExist(group.getGroupId()));
+    }
+
+
     @DisplayName("Test throw StudentIdLessThanZeroException when invoke findAllGroupByStudentId method")
     @Test
     void testThrowStudentIdLessThanZeroExceptionWhenInvokeFindAllGroupByStudentIdMethod() {
@@ -63,7 +72,6 @@ class GroupServiceImplTest {
     void testThrowGroupDoesntExistExceptionWhenInvokeDeleteGroup(){
         assertThrows(GroupDoesntExistException.class, () -> groupService.deleteGroupById(200));
     }
-
 
 
 }
