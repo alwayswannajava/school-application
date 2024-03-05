@@ -45,7 +45,7 @@ class StudentServiceImplTest {
     @Test
     void testThrowStudentExistsExceptionWhenCreateStudent(){
         Student student = new Student(2, 3, "Ivan", "Cirko");
-        when(studentDao.isStudentExist(student.getStudentId())).thenThrow(StudentExistsException.class);
+        when(studentDao.isStudentExist(student.getStudentId())).thenReturn(true);
         assertThrows(StudentExistsException.class, () -> studentService.create(student));
     }
 
