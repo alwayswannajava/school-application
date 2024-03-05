@@ -41,6 +41,14 @@ class StudentServiceImplTest {
         verify(studentDao, times(1)).create(student);
     }
 
+    @DisplayName("Test throw StudentExistsException when create student")
+    @Test
+    void testThrowStudentExistsExceptionWhenCreateStudent(){
+        Student student = new Student(2, 3, "Ivan", "Cirko");
+        when(studentDao.isStudentExist(student.getStudentId())).thenThrow(StudentExistsException.class);
+        assertThrows(StudentExistsException.class, () -> studentService.create(student));
+    }
+
     @DisplayName("Test throw StudentIdIsLessThanZeroException when create student")
     @Test
     void testThrowStudentIdIsLessThanZeroExceptionWhenCreateStudent(){
@@ -48,15 +56,25 @@ class StudentServiceImplTest {
         assertThrows(StudentIdIsLessThanZeroException.class, () -> studentService.create(student));
     }
 
+    @DisplayName("Test delete student")
+    @Test
+    void testDeleteStudentById(){
+        Student student = new Student(3, 2, "Ivan", "Ivanov");
+        when(studentDao.isStudentExist(student.getStudentId())).thenReturn(true);
+        studentService.deleteStudentById(student.getStudentId());
+        verify(studentDao, times(1)).deleteStudentById(student.getStudentId());
+    }
+
+
     @DisplayName("Test throw StudentDoesntExistException when delete student")
     @Test
-    void testThrowStudentDoesntExistExceptionWhenDeleteStudent(){
+    void testThrowStudentIdIsLessThanZeroExceptionWhenDeleteStudent(){
         assertThrows(StudentIdIsLessThanZeroException.class, () -> studentService.deleteStudentById(-500));
     }
 
     @DisplayName("Test throw StudentIdIsLessThanZeroException when delete student")
     @Test
-    void testThrowStudentIdIsLessThanZeroExceptionWhenDeleteStudent(){
+    void testThrowStudentDoesntExistExceptionWhenDeleteStudent(){
         assertThrows(StudentDoesntExistException.class, () -> studentService.deleteStudentById(300));
     }
 
@@ -102,13 +120,5 @@ class StudentServiceImplTest {
     @Test
     void testThrowStudentCourseDoesntExistExceptionWhenRemoveStudentFromCourse(){
         assertThrows(StudentCourseDoesntExistException.class, () -> studentService.removeStudentFromCourse(1000, 3000));
-    }
-
-    @DisplayName("Test isStudentExist method")
-    @Test
-    void testIsGroupExistReturnsBoolean() {
-        Student student = new Student(3, 5, "Ivan", "Ivanov");
-        studentDao.isStudentExist(student.getStudentId());
-        verify(studentDao).isStudentExist(student.getStudentId());
     }
 }

@@ -40,12 +40,6 @@ class CourseServiceImplTest {
         assertThrows(CourseIdLessThanZeroException.class, () -> courseService.create(course));
     }
 
-    @DisplayName("Test isGroupExist method")
-    @Test
-    void testIsGroupExistMethodReturnsBoolean(){
-        Course course = new Course(12, "History", "History");
-        courseDao.isCourseExist(course.getCourseId());
-        verify(courseDao).isCourseExist(course.getCourseId());
-    }
+
 
 }

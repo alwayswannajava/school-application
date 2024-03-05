@@ -64,13 +64,6 @@ class GroupServiceImplTest {
         assertThrows(GroupDoesntExistException.class, () -> groupService.deleteGroupById(200));
     }
 
-    @DisplayName("Test isGroupExist method returns boolean")
-    @Test
-    void testIsGroupExistReturnsBoolean() {
-        Group group = new Group(4, "WL-61");
-        groupDao.isGroupExist(group.getGroupId());
-        verify(groupDao).isGroupExist(group.getGroupId());
-    }
 
 
 }
