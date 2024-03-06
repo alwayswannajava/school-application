@@ -46,14 +46,13 @@ class GroupServiceImplTest {
         verify(groupDao, times(1)).create(group);
     }
 
-    @DisplayName("Test throw")
+    @DisplayName("Test throw GroupExistsException when create")
     @Test
-    void testAAA(){
-        Group group = new Group(2, "KW-28");
-        when(groupDao.isGroupExist(group.getGroupId())).thenReturn(false);
-        assertEquals(false, groupDao.isGroupExist(group.getGroupId()));
+    void testThrowGroupExistsExceptionWhenCreate() {
+        Group group = new Group(2, "KW-52");
+        when(groupDao.isGroupExist(group.getGroupId())).thenReturn(true);
+        assertThrows(GroupExistsException.class, () -> groupService.create(group));
     }
-
 
     @DisplayName("Test throw StudentIdLessThanZeroException when invoke findAllGroupByStudentId method")
     @Test
