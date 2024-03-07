@@ -54,6 +54,7 @@ class GroupServiceImplTest {
         assertThrows(GroupExistsException.class, () -> groupService.create(group));
     }
 
+
     @DisplayName("Test throw StudentIdLessThanZeroException when invoke findAllGroupByStudentId method")
     @Test
     void testThrowStudentIdLessThanZeroExceptionWhenInvokeFindAllGroupByStudentIdMethod() {
@@ -62,13 +63,13 @@ class GroupServiceImplTest {
 
     @DisplayName("Test throw GroupIdIsLessThanZeroException when delete group")
     @Test
-    void testThrowGroupIdIsLessThanZeroExceptionWhenDeleteGroup(){
+    void testThrowGroupIdIsLessThanZeroExceptionWhenDeleteGroup() {
         assertThrows(GroupIdIsLessThanZeroException.class, () -> groupService.deleteGroupById(-100));
     }
 
     @DisplayName("Test throw GroupDoesntExistException when invoke delete group")
     @Test
-    void testThrowGroupDoesntExistExceptionWhenInvokeDeleteGroup(){
+    void testThrowGroupDoesntExistExceptionWhenInvokeDeleteGroup() {
         assertThrows(GroupDoesntExistException.class, () -> groupService.deleteGroupById(200));
     }
 
